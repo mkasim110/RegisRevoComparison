@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace XmlToJSON
+namespace RegisRevoComparison
 {
     public class REVOFields
     {
@@ -152,8 +152,8 @@ namespace XmlToJSON
         public string Cont_ERC_Flg { get; set; }
         public double? Cont_ERC_Pct { get; set; }
         public object Cont_UPR_Code { get; set; }
-        public string Cont_Est_SPI_100 { get; set; }
-        public string Cont_SPI_100 { get; set; }
+        public double? Cont_Est_SPI_100 { get; set; }
+        public double? Cont_SPI_100 { get; set; }
 
     }
 

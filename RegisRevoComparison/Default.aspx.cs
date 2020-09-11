@@ -21,12 +21,12 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 
-namespace XmlToJSON
+namespace RegisRevoComparison
 {
     public partial class Default : System.Web.UI.Page
     {
         private SqlConnection con,con1;
-        private SqlCommand cmd;
+        private SqlCommand cmd,cmd1;
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -34,7 +34,7 @@ namespace XmlToJSON
                
                 if (!IsPostBack)
                 {
-                    Generatereport();
+                   // Generatereport();
                 }
             }
             catch (Exception ex)
@@ -44,6 +44,20 @@ namespace XmlToJSON
 
 
         }
+
+        protected void btnGenerateReport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Generatereport();
+            }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+
+        }
+
         private void connection()
         {
             string constr = ConfigurationManager.ConnectionStrings["Fac_conn"].ToString();
@@ -92,6 +106,14 @@ namespace XmlToJSON
             DataRow dr;
             connection();
 
+            cmd1 = new SqlCommand("truncate table regisrevodt");
+            cmd1.Connection = con;
+            cmd1.CommandType = CommandType.Text;
+            con.Open();
+            cmd1.ExecuteNonQuery();
+            con.Close();
+
+
             cmd = new SqlCommand("sp_get_Regis_revo_comparison");
             cmd.Connection = con;
             cmd.CommandType = CommandType.StoredProcedure;
@@ -135,13 +157,13 @@ namespace XmlToJSON
                         dr["ExpiredDate"] = prop.Cont_Date_Expiration;
                         dr["Arrived"] = prop.Cont_Date_Arrived;
                         dr["No_of_Reinstatement"] = prop.Cont_No_Of_Reinst;
-                        dr["OccurLimit"] = string.Format("{0:#,##0.##}", prop.Cont_100_Limit_Occurance);
-                        dr["OurLimitAgg"] = string.Format("{0:#,##0.##}", prop.Cont_100_Limit_Aggregate);
-                        dr["OurAggDeductible"] = prop.Cont_Our_Agg_Deductible ?? 0;
+                        dr["OccurLimit"] = string.Format("{0:n}", prop.Cont_100_Limit_Occurance);
+                        dr["OurLimitAgg"] = string.Format("{0:n}", prop.Cont_100_Limit_Aggregate);
+                        dr["OurAggDeductible"] = string.Format("{0:n}", prop.Cont_Our_Agg_Deductible ?? 0.00);
                         dr["AttachmentBasis"] = prop.Cont_Attach_Basis;
                         dr["LimitBais"] = prop.Cont_Limit_Basis;
                         dr["BoundShare"] = string.Format("{0:#,##0.00000000}", prop.Cont_Bound_Share);
-                        dr["Est_SPI_100"] = String.Format("{0:n0}", Double.Parse(prop.Cont_Est_SPI_100));
+                        dr["Est_SPI_100"] = string.Format("{0:n}", prop.Cont_Est_SPI_100);
                         dr["Brokerage"] = string.Format("{0:#,##0.00000000}", prop.Cont_Brokerage_Pct);
                         dr["Commission"] = string.Format("{0:#,##0.00000000}", prop.Cont_Comm_Pct);
                         dr["Comm_Overide_pct"] = string.Format("{0:#,##0.00000000}", prop.Cont_Comm_Override_Pct);
@@ -152,7 +174,7 @@ namespace XmlToJSON
                         dr["GrossUp"] = string.Format("{0:#,##0.00000000}", prop.Cont_Gross_Up_Flag);
 
                         dr["GrossUpPer"] = string.Format("{0:#,##0.00000000}", prop.Cont_Gross_Up_Pct);
-                        dr["FET_Taxes"] = prop.Cont_FET_Taxes;
+                        dr["FET_Taxes"] = string.Format("{0:#,##0.00}", prop.Cont_FET_Taxes);
                         dr["ReinProfitExpence"] = string.Format("{0:#,##0.00000000}", prop.Cont_PC_Reins_Profit_Exp_Pct);
                         dr["CurrencyPrimary"] = prop.Cont_Currency_Primary;
                         dr["PC_Deficit_Years"] = prop.Cont_PC_Deficit_CF_Years;
@@ -163,22 +185,22 @@ namespace XmlToJSON
                         dr["PC_Calc_date"] = prop.Cont_PC_First_Calc_Date;
                         dr["SS_Max_Comm_pct"] = string.Format("{0:#,##0.00000000}", prop.Cont_SS_Max_Commission_Pct);
                         dr["SS_Max_Loss_Ratio"] = string.Format("{0:#,##0.00000000}", prop.Cont_SS_Max_Loss_Ratio);
-                        dr["placement"] = prop.Cont_Placement;
+                        dr["placement"] = string.Format("{0:n}", prop.Cont_Placement);
                         dr["LossTrigger"] = prop.cont_loss_trigger;
-                        dr["Cont_Prem_Deposit_100"] = string.Format("{0:#,##0.##}", prop.cont_premium_deposit_100);
-                        dr["FlatPremium100"] = string.Format("{0:#,##0.##}", prop.cont_premium_flat_100);
-                        dr["MinPremium100"] = string.Format("{0:#,##0.##}", prop.cont_premium_min_100);
+                        dr["Cont_Prem_Deposit_100"] = string.Format("{0:n}", prop.cont_premium_deposit_100);
+                        dr["FlatPremium100"] = string.Format("{0:n}", prop.cont_premium_flat_100);
+                        dr["MinPremium100"] = string.Format("{0:n}", prop.cont_premium_min_100);
 
                         dr["Cedant"] = prop.Cont_Report_CP_id;
                         dr["Reference"] = prop.Cont_Broker_Ref;
                         dr["ContractType"] = prop.Cont_Type;
-                        dr["AttachmentPoint100"] = prop.Cont_100_Attachment_Point;
-                        dr["ContractLimit100"] = prop.Cont_100_Limit;
-                        dr["AggregateLimit100"] = prop.Cont_100_Limit_Aggregate;
-                        dr["RiskLimit100"] = prop.Cont_100_Limit_Risk;
-                        dr["AggregateDeductible100"] = prop.Cont_100_Agg_Deductible;
-                        dr["EstimatedSPI100"] = String.Format("{0:n}", Double.Parse(prop.Cont_Est_SPI_100));
-                        dr["SPI100"] = String.Format("{0:n}", Double.Parse(prop.Cont_SPI_100));
+                        dr["AttachmentPoint100"] = string.Format("{0:n}", prop.Cont_100_Attachment_Point);
+                        dr["ContractLimit100"] = string.Format("{0:n}", prop.Cont_100_Limit);
+                        dr["AggregateLimit100"] = string.Format("{0:n}", prop.Cont_100_Limit_Aggregate);
+                        dr["RiskLimit100"] = string.Format("{0:n}", prop.Cont_100_Limit_Risk);
+                        dr["AggregateDeductible100"] = string.Format("{0:n}", prop.Cont_100_Agg_Deductible);
+                        dr["EstimatedSPI100"] = string.Format("{0:n}", prop.Cont_Est_SPI_100);
+                        dr["SPI100"] = string.Format("{0:n}", prop.Cont_SPI_100);
                         dr["Accrual"] = prop.Cont_Accrual_Calc_Flag;
                         dr["LAETerms"] = prop.Cont_LAE_Terms;
                         dr["SS_Prov_Comm_Pct"] = string.Format("{0:#,##0.00000000}", prop.Cont_SS_Prov_Comm_Pct);
@@ -194,20 +216,25 @@ namespace XmlToJSON
                         dr["Earnings"] = prop.Cont_UPR_Code;
                         dr["PremiumEarnings"] = prop.Cont_UPR_Code;
                         dr["PremiumMethod"] = prop.Cont_Prem_Method;
-                        dr["LossMethod"] = prop.Cont_Prem_Method;
+
+                        if(prop.Cont_Type == "QS" || prop.Cont_Type=="RPQ")
+                            dr["LossMethod"] = "BDX";
+                        else
+                            dr["LossMethod"] ="IND";
+                        //dr["LossMethod"] = prop.Cont_Prem_Method;
                         dr["CommAcct"] = prop.Cont_Common_Acct_Flag;
                         dr["AP"] = prop.Cont_AP_Flag;
                         dr["ExperianceRate"] = prop.Cont_Stop_Loss_Flag;
                         dr["NCB"] = prop.Cont_NCB_Flag;
                         dr["NCB_pct"] = prop.Cont_NCB_Pct;
                         dr["StopLoss"] = prop.Cont_Stop_Loss_Flag;
-                        dr["PercentLimit"] = prop.Cont_Stop_Loss_Limit_Pct;
-                        dr["LossCorridor"] = prop.Cont_Stop_Loss_Attach_Pct;
+                        dr["PercentLimit"] = string.Format("{0:#,##0.0000000000}", prop.Cont_Stop_Loss_Limit_Pct);
+                        dr["LossCorridor"] = string.Format("{0:#,##0.0000000000}", prop.Cont_Stop_Loss_Attach_Pct);
                         dr["PC_LC_Flag"] = prop.Cont_PC_LC_Flag;
                         dr["LowerThreshold"] = prop.Cont_PC_LC_Begin;
 
                         dr["UpperThreshold"] = prop.Cont_PC_LC_End;
-                        dr["CedantParticipation"] = prop.Cont_PC_Cedeco_Retention_Pct;
+                        dr["CedantParticipation"] = string.Format("{0:#,##0.00000000}", prop.Cont_PC_Cedeco_Retention_Pct);
                         dr["NthEvent"] = prop.cont_nth_event;
                         dr["SettlementDays"] = prop.Cont_Install_Settlement_Days;
                         dr["ReportingDays"] = prop.Cont_Bdx_Report_Due_Days;
@@ -219,7 +246,7 @@ namespace XmlToJSON
                         dr["QS_Of_XS"] = prop.Cont_QS_Of_XS;
                         dr["Frequency"] = prop.Cont_Install_Freq;
                         dr["ERC"] = prop.Cont_ERC_Flg;
-                        dr["ERC_pct"] = prop.Cont_ERC_Pct ?? 0; 
+                        dr["ERC_pct"] = string.Format("{0:#,##0.0000000000}", prop.Cont_ERC_Pct ?? 0.0000000000); 
                         dr["BDX_Frequency"] = prop.Cont_BDX_Freq;
                         dr["ProgramId"] = stops[i]["pgm_id"].ToString();
                         dr["pgm_AC"] = stops[i]["pgm_assumed_ceded_flag"].ToString();
@@ -236,16 +263,16 @@ namespace XmlToJSON
             }
            
 
-            ReportViewer1.Reset();
-            ReportViewer1.SizeToReportContent = true;
-            ReportViewer1.ProcessingMode = ProcessingMode.Local;
+            //ReportViewer1.Reset();
+            //ReportViewer1.SizeToReportContent = true;
+            //ReportViewer1.ProcessingMode = ProcessingMode.Local;
 
-            ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/rptRegisREVOcomp.rdlc");
-            DataSet1 rptDs = new DataSet1();
-            ReportViewer1.LocalReport.DataSources.Clear();
-            ReportDataSource _rsource1 = new ReportDataSource("DataSet1", dt);
-            ReportViewer1.LocalReport.DataSources.Add(_rsource1);
-            var ds = new DataSet("DataSet1");
+            //ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/rptRegisREVOcomp.rdlc");
+            //DataSet1 rptDs = new DataSet1();
+            //ReportViewer1.LocalReport.DataSources.Clear();
+            //ReportDataSource _rsource1 = new ReportDataSource("DataSet1", dt);
+            //ReportViewer1.LocalReport.DataSources.Add(_rsource1);
+            //var ds = new DataSet("DataSet1");
             // string crtTable= CreateTABLE("RegisRevoDt",dt);
 
             using (var sqlBulk = new SqlBulkCopy(ConfigurationManager.ConnectionStrings["Fac_conn"].ToString()))
@@ -253,11 +280,14 @@ namespace XmlToJSON
                 sqlBulk.DestinationTableName = "RegisRevoDt";
                 sqlBulk.WriteToServer(dt);
             }
-            ReportViewer1.AsyncRendering = false;
+            Response.Redirect("http://financeapps1:8080/Regis_Reports/Reg_Rev_MY_3.rpt", false);
+            Context.ApplicationInstance.CompleteRequest();
+            
+            //ReportViewer1.AsyncRendering = false;
            
-            ReportViewer1.ZoomMode = ZoomMode.FullPage;
-            ReportViewer1.Width = 75;
-            ReportViewer1.LocalReport.Refresh();
+            //ReportViewer1.ZoomMode = ZoomMode.FullPage;
+            //ReportViewer1.Width = 75;
+            //ReportViewer1.LocalReport.Refresh();
         }
 
     }

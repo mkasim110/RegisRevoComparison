@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.960
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisRevoComparison", "XmlToJSON\RegisRevoComparison.csproj", "{3E8D9708-B024-4A0B-96AE-FA549A75378A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisRevoComparison", "RegisRevoComparison\RegisRevoComparison.csproj", "{3E8D9708-B024-4A0B-96AE-FA549A75378A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

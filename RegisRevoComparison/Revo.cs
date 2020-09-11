@@ -1,4 +1,4 @@
-﻿namespace XmlToJSON
+﻿namespace RegisRevoComparison
 {
     internal class Revo
     {
