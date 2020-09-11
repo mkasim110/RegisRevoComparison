@@ -119,7 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
-    <Content Include="RegisRevo.aspx" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -151,14 +150,6 @@
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisRevo.aspx.cs">
-      <DependentUpon>RegisRevo.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="RegisRevo.aspx.designer.cs">
-      <DependentUpon>RegisRevo.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Revo.cs" />
     <Compile Include="REVOFields.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
