@@ -122,7 +122,7 @@ namespace RegisRevoComparison
         public double? cont_premium_deposit_100 { get; set; }
         public string Cont_Premium_Adj_XS { get; set; }
         public double? Cont_Premium_Adj_Rate { get; set; }
-        public List<object> cont_reins { get; set; }
+        public List<cont_rein> cont_reins { get; set; }
         public string Cont_Common_Acct_Flag { get; set; }
         public string Cont_AP_Flag { get; set; }
         public string Cont_NCB_Flag { get; set; }
@@ -154,7 +154,8 @@ namespace RegisRevoComparison
         public object Cont_UPR_Code { get; set; }
         public double? Cont_Est_SPI_100 { get; set; }
         public double? Cont_SPI_100 { get; set; }
-
+        public object Cont_Port_In_UPR_Code { get; set; }
+        public object Cont_Port_Out_UPR_Code { get; set; }
     }
 
     public class MyArray
@@ -178,6 +179,19 @@ namespace RegisRevoComparison
 
     }
 
+    public class cont_rein
+    {
+        public string cont_reins_id { get; set; }
+
+        public string contract_id { get; set; }
+        public string cont_reins_order { get; set; }
+        public string cont_reins_qty { get; set; }
+        public string cont_reins_pct { get; set; }
+        public string cont_reins_brok_pct { get; set; }
+        public string cont_reins_desc { get; set; }
+        public string Cont_LBP_Pr { get; set; }
+      
+    }
     public class Root
     {
         public List<MyArray> MyArray { get; set; }
