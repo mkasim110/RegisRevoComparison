@@ -10,7 +10,7 @@
 namespace RegisRevoComparison {
     
     
-    public partial class RegisRevoFilter {
+    public partial class EntityUW {
         
         /// <summary>
         /// form1 control.
@@ -58,15 +58,6 @@ namespace RegisRevoComparison {
         protected global::System.Web.UI.WebControls.Button BtnExport;
         
         /// <summary>
-        /// btnExportPdf control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnExportPdf;
-        
-        /// <summary>
         /// BtnRefresh control.
         /// </summary>
         /// <remarks>
@@ -76,13 +67,22 @@ namespace RegisRevoComparison {
         protected global::System.Web.UI.WebControls.Button BtnRefresh;
         
         /// <summary>
-        /// btnEntUWRpt control.
+        /// txtPeriod control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEntUWRpt;
+        protected global::System.Web.UI.WebControls.TextBox txtPeriod;
+        
+        /// <summary>
+        /// txtLe control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLe;
         
         /// <summary>
         /// btnEntUw control.
@@ -112,24 +112,6 @@ namespace RegisRevoComparison {
         protected global::System.Web.UI.UpdatePanel UpdatePanel2;
         
         /// <summary>
-        /// grdUYCnt control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdUYCnt;
-        
-        /// <summary>
-        /// grdUWCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdUWCount;
-        
-        /// <summary>
         /// grdEntityCnt control.
         /// </summary>
         /// <remarks>
@@ -139,13 +121,13 @@ namespace RegisRevoComparison {
         protected global::System.Web.UI.WebControls.GridView grdEntityCnt;
         
         /// <summary>
-        /// grdStatusCount control.
+        /// grdUWCount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdStatusCount;
+        protected global::System.Web.UI.WebControls.GridView grdUWCount;
         
         /// <summary>
         /// btnClear control.
@@ -175,22 +157,22 @@ namespace RegisRevoComparison {
         protected global::System.Web.UI.WebControls.Label lblData;
         
         /// <summary>
-        /// UpdatePanel5 control.
+        /// grdUYCnt control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdatePanel5;
+        protected global::System.Web.UI.WebControls.GridView grdUYCnt;
         
         /// <summary>
-        /// grdFieldCount control.
+        /// grdStatusCount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdFieldCount;
+        protected global::System.Web.UI.WebControls.GridView grdStatusCount;
         
         /// <summary>
         /// UpdatePanel3 control.
@@ -211,6 +193,24 @@ namespace RegisRevoComparison {
         protected global::System.Web.UI.WebControls.GridView grdResult;
         
         /// <summary>
+        /// UpdatePanel5 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel5;
+        
+        /// <summary>
+        /// grdFieldCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView grdFieldCount;
+        
+        /// <summary>
         /// UpdatePanel4 control.
         /// </summary>
         /// <remarks>
@@ -220,31 +220,13 @@ namespace RegisRevoComparison {
         protected global::System.Web.UI.UpdatePanel UpdatePanel4;
         
         /// <summary>
-        /// lblReason control.
+        /// grdExcluded control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblReason;
-        
-        /// <summary>
-        /// ddlReason control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlReason;
-        
-        /// <summary>
-        /// txtReason control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtReason;
+        protected global::System.Web.UI.WebControls.GridView grdExcluded;
         
         /// <summary>
         /// lblMsg control.
@@ -290,14 +272,5 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnInc;
-        
-        /// <summary>
-        /// grdExcluded control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdExcluded;
     }
 }

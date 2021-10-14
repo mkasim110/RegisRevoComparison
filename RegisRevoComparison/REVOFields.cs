@@ -121,7 +121,7 @@ namespace RegisRevoComparison
         public double? cont_premium_min_100 { get; set; }
         public double? cont_premium_deposit_100 { get; set; }
         public string Cont_Premium_Adj_XS { get; set; }
-        public double? Cont_Premium_Adj_Rate { get; set; }
+        public decimal? Cont_Premium_Adj_Rate { get; set; }
         public List<cont_rein> cont_reins { get; set; }
         public string Cont_Common_Acct_Flag { get; set; }
         public string Cont_AP_Flag { get; set; }
@@ -191,6 +191,15 @@ namespace RegisRevoComparison
         public string cont_reins_desc { get; set; }
         public string Cont_LBP_Pr { get; set; }
       
+    }
+    public class FilterValues
+    {
+        public string lstUY { get; set; }
+        public string lstENT { get; set; }
+        public string lstUW { get; set; }
+        public string lstStatus { get; set; }
+        public string lstField { get; set; }
+        public string lstYear { get; set; }
     }
     public class Root
     {

@@ -7,13 +7,14 @@ namespace RegisRevoComparison
 {
     public class DbModel
     {
-        public List<EntityCnt> EntityCount { get; set; }
+       // public List<EntityCnt> EntityCount { get; set; }
     }
     public class ExcludedFields
     {
         public string PlatformId { get; set; }
         public string Field_desc { get; set; }
-       
+        public string Reason { get; set; }
+
     }
     public class EntityCnt
     {
@@ -25,7 +26,7 @@ namespace RegisRevoComparison
     {
         public string EntityName { get; set; }
         public string Status { get; set; }
-        public string Count { get; set; }
+        public int Count { get; set; }
         public string UY { get; set; }
         public string ChkBox { get; set; }
     }

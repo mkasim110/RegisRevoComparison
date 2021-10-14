@@ -536,11 +536,40 @@ namespace RegisRevoComparison
             con.Open();
             cmd1.ExecuteNonQuery();
             con.Close();
-              Response.Redirect("http://financeapps1:8080/Regis_Reports/REGREVCOMP_QA.rpt?prompt0=" + txtEntity.Text + "&prompt1=" + txtMasterKey.Text + "&prompt2=" + txtUW.Text + "&prompt3=" + txtSegment.Text + "&prompt4=" + datafile + "&prompt5="+ ddlReportVers.SelectedItem.Text+"", false);
-           // Response.Redirect("http://financeapps1:8080/Regis_Reports/REGREVCOMP.rpt?prompt0=" + txtEntity.Text + "&prompt1=" + txtMasterKey.Text + "&prompt2=" + txtUW.Text + "&prompt3=" + txtSegment.Text + "&prompt4=" + datafile + "", false);
-            Context.ApplicationInstance.CompleteRequest();
-            
+            //   Response.Redirect("http://financeapps1:8080/Regis_Reports/REGREVCOMP_QA.rpt?prompt0=" + txtEntity.Text + "&prompt1=" + txtMasterKey.Text + "&prompt2=" + txtUW.Text + "&prompt3=" + txtSegment.Text + "&prompt4=" + datafile + "&prompt5="+ ddlReportVers.SelectedItem.Text+"", false);
+            //// Response.Redirect("http://financeapps1:8080/Regis_Reports/REGREVCOMP.rpt?prompt0=" + txtEntity.Text + "&prompt1=" + txtMasterKey.Text + "&prompt2=" + txtUW.Text + "&prompt3=" + txtSegment.Text + "&prompt4=" + datafile + "", false);
+            // Context.ApplicationInstance.CompleteRequest();
+            dt = new DataTable();
+            cmd = new SqlCommand("select * from regrevcomp_DT where 1=0");
+            cmd.Connection = con;
+            cmd.CommandType = CommandType.Text;
+            // cmd.Parameters.AddWithValue("@eff_date", "2020/07/01");
+            //cmd.Parameters.AddWithValue("@datafile", datafile);
+            using (var adap = new SqlDataAdapter(cmd))
+            {
+                adap.Fill(dt);
+            }
 
+            cmd1 = new SqlCommand("sp_RegisRevoDt_with_parms_3");
+            cmd1.Connection = con;
+            cmd1.CommandType = CommandType.StoredProcedure;
+            cmd1.Parameters.AddWithValue("@entity", null);
+            cmd1.Parameters.AddWithValue("@masterkey", null);
+            cmd1.Parameters.AddWithValue("@uw", null);
+            cmd1.Parameters.AddWithValue("@segment", null);
+            cmd1.Parameters.AddWithValue("@datafile", datafile);
+            cmd1.Parameters.AddWithValue("@rpt_type", null);
+
+            using (var rdr = cmd1.ExecuteReader())
+            {
+                dt.Load(rdr);
+            }
+
+            using (var sqlBulk = new SqlBulkCopy(ConfigurationManager.ConnectionStrings["New_REGREV_Conn"].ToString()))
+            {
+                sqlBulk.DestinationTableName = "regrevcomp_DT";
+                sqlBulk.WriteToServer(dt);
+            }
 
         }
 

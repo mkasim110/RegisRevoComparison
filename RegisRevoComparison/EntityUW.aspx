@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="RegisRevoFilter.aspx.cs" Inherits="RegisRevoComparison.RegisRevoFilter" EnableEventValidation="false"  Async="true" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EntityUW.aspx.cs" Inherits="RegisRevoComparison.EntityUW" EnableEventValidation="false"  Async="true" %>
 
 <!DOCTYPE html>
 
@@ -10,21 +10,15 @@
         html,body {
     height: 97vh;
      overflow: hidden;
-     font-family:Calibri;
 }
         
          .HeaderStyle
         {
             position: absolute;
             margin-top: -1px;
-            font-size:10px;
-            font-family:Calibri;
             border-top: 1px solid black;
             border-bottom: 1px solid black;
         }
-           .centerHeaderText th {
-        text-align: center;
-    }
         .radioButtonList label{
     display:inline;
     padding-right: 30px;
@@ -94,18 +88,16 @@ margin:5px;
         document.getElementById('dvProgressBar').style.visibility = 'visible';
       }
 
-        function HideProgressBar() {
-          
-          document.getElementById('dvProgressBar').style.visibility = "hidden";
-          document.getElementById("txtReason").style.visibility="hidden";
+      function HideProgressBar() {
+        document.getElementById('dvProgressBar').style.visibility = "hidden";
       }
   
 </script>
      
 </head>
-<body  onload="javascript:HideProgressBar()" style="font-family:Calibri;">
+<body  onload="javascript:HideProgressBar()">
     <form id="form1" runat="server">
-         <asp:ScriptManager ID="ScriptManager1" runat="server" AsyncPostBackTimeOut="1000">
+         <asp:ScriptManager ID="ScriptManager1" runat="server" AsyncPostBackTimeOut="300">
     </asp:ScriptManager>
        <div class="container-fluid">
         <div class="row">
@@ -124,7 +116,7 @@ margin:5px;
                     <asp:RadioButtonList runat="server" ID="rdBtnRptType" CssClass="radioButtonList" AutoPostBack="True" 
                         OnSelectedIndexChanged="rdBtnRptType_SelectedIndexChanged" RepeatDirection="Horizontal" >
                     <asp:ListItem Value="U" Selected="True">UW Report</asp:ListItem>
-                     <asp:ListItem Value="A">Audit Report</asp:ListItem>
+                     <asp:ListItem Value="A">AUDIT Report</asp:ListItem>
                 </asp:RadioButtonList>
         </li></ul>
                   
@@ -132,13 +124,12 @@ margin:5px;
 <ul class="nav navbar-nav navbar-right">
     
      
-                     
-    <li>                   <asp:Button ID="BtnExport" Text="Export Excel" class="btn btn-success" runat="server"  OnClick="BtnExport_Click"   /></li>
-    <li>                   <asp:Button ID="btnExportPdf" Text="Export Pdf" class="btn btn-success" runat="server"  OnClick="btnExportPdf_Click"   /></li>
+                     <%--<li style="margin-right:20px;"><asp:TextBox CssClass="form-control" runat="server"  autocomplete="off" ID="txtUW"  placeholder="Search UnderWriter" ></asp:TextBox></li>--%>
+    <li>                   <asp:Button ID="BtnExport" Text="Export ENT/UW Report" class="btn btn-success" runat="server"  OnClick="BtnExport_Click"   /></li>
                     <li><asp:Button ID="BtnRefresh" Text="Refresh" class="btn btn-primary" runat="server" OnClick="BtnRefresh_Click"  OnClientClick="javascript:ShowProgressBar()" /></li>
-    
-     <li><asp:Button ID="btnEntUWRpt" Text="Ent/UW Report"   Visible="false" class="btn btn-primary" runat="server" OnClick="btnEntUWRpt_Click"   /></li>
-   <li><asp:Button ID="btnEntUw" Text="Excluded Data Report"   class="btn btn-primary" runat="server" OnClick="btnEntUw_Click"   /></li>
+    <li><asp:TextBox ID="txtPeriod" Visible="false" runat="server" ForeColor="Black" ></asp:TextBox></li>
+    <li><asp:TextBox ID="txtLe" Visible="false" runat="server" ForeColor="Black" ></asp:TextBox></li>
+    <li><asp:Button ID="btnEntUw" Text="Excluded Data Report"   class="btn btn-primary" runat="server" OnClick="btnEntUw_Click"   /></li>
                     <li><label style="margin-right:50px;" runat="server" id="lblUser">Windows User</label></li>
     </ul>
                         
@@ -157,83 +148,90 @@ margin:5px;
                       <asp:AsyncPostBackTrigger ControlID="grdUYCnt" />
                  </Triggers>
                 <ContentTemplate>
-          <table style="width:100%;">
-                      <tr style="width:100%;">
-                
-
-                 <td style="width:26%;">
-                <div class="scroll">
-                 <asp:GridView runat="server"  ID="grdUYCnt"  DataKeyNames="EntityName" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
-                     <HeaderStyle BackColor="Black"  Font-Bold="false" CssClass="centerHeaderText"  ForeColor="White"  />
+           <table><tr>
+               <td style="width:20%;">
+                   <div class="scroll">
+                 <asp:GridView runat="server" ID="grdEntityCnt" DataKeyNames="EntityName" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
+                    <HeaderStyle BackColor="Black" Font-Bold="false"  ForeColor="White"  />
+                     <Columns>  
+                          <asp:TemplateField>
+<ItemTemplate>
+<asp:CheckBox ID="chkEnt" runat="server" AutoPostBack="true" onclick="CheckSingleCheckbox(this);" OnCheckedChanged="chkEnt_CheckedChanged1" />
+</ItemTemplate>
+</asp:TemplateField>
+                     <asp:BoundField DataField="EntityName" HeaderText="Entity" ReadOnly="True" SortExpression="EntityName" />  
+                     
+</Columns>
+                 </asp:GridView>
+                       </div>
+                   </td> 
+               <td style="width:30%;">
+                    <div class="scroll">
+                 <asp:GridView runat="server"  ID="grdUWCount" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False"
+                 OnRowDataBound="grdUWCount_RowDataBound"    CssClass="table table-striped table-bordered table-hover table-condensed">
+                      <HeaderStyle BackColor="Black" Font-Bold="false" ForeColor="White"  />
                      <Columns>  
                          <asp:TemplateField>
 <ItemTemplate>
-<asp:CheckBox ID="chkUY" runat="server" AutoPostBack="true"  OnCheckedChanged="chkEnt_CheckedChanged1" />
+<asp:CheckBox ID="chkEntStatus" runat="server" AutoPostBack="true" onclick="CheckSingleCheckbox(this);" OnCheckedChanged="chkEntStatus_CheckedChangedUW" />
 </ItemTemplate>
 </asp:TemplateField>
-                          <asp:BoundField DataField="EntityName" HeaderText="Rel UW" SortExpression="UY"  /> 
+                         
+                     <asp:BoundField DataField="EntityName" HeaderText="Underwriter" ReadOnly="True" SortExpression="EntityName" />  
+                         
+                     <asp:BoundField DataField="Count" DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HeaderText="Count" SortExpression="Cnt"  /> 
+                        
+</Columns>
+                 </asp:GridView>
+                        </div>
+               </td>
+                 <td style="width:20%;">
+                   <ul style="list-style-type: none;">
+    
+                    
+                    <li><asp:Button ID="btnClear" Visible="false" Text="Clear Criteria" class="btn btn-primary" runat="server" OnClick="btnClear_Click"  /></li>
+                    <li style="margin-top:10px;"><asp:TextBox CssClass="form-control" Visible="false" runat="server" autocomplete="off" ID="txtProgramNumber" placeholder="Atleast 4 Number of Progam" TextMode="Number" ></asp:TextBox></li>
+                       <li style="margin-top:10px;"><asp:Label  runat="server"  ID="lblData"  ></asp:Label></li>
+                       </ul>
+
+               </td>
+                 <td style="width:20%;">
+                <div style="display:none;" class="scroll">
+                 <asp:GridView runat="server"  Visible="false" ID="grdUYCnt" DataKeyNames="UY" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
+                     <HeaderStyle BackColor="Black" Font-Bold="false"  ForeColor="White"  />
+                     <Columns>  
+                         <asp:TemplateField>
+<ItemTemplate>
+<asp:CheckBox ID="chkUY" runat="server" AutoPostBack="true" onclick="CheckSingleCheckbox(this);" OnCheckedChanged="chkUY_CheckedChangedUY" />
+</ItemTemplate>
+</asp:TemplateField>
+                          <asp:BoundField DataField="UY" HeaderText="UY" SortExpression="UY"  /> 
                     
                           
-                     <%--<asp:BoundField DataField="Count"  DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HtmlEncode="false" HeaderText="Count" SortExpression="Count"  /> --%>
+                     <asp:BoundField DataField="Count" DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HtmlEncode="false" HeaderText="Count" SortExpression="Count"  /> 
                         
 </Columns>
                  </asp:GridView>
                     </div>
                 </td>
 
-                <td style="width:0%;display:none;">
-                    <div class="scroll">
-                 <asp:GridView runat="server"  ID="grdUWCount" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False"
-                 OnRowDataBound="grdUWCount_RowDataBound"    CssClass="table table-striped table-bordered table-hover table-condensed">
-                      <HeaderStyle BackColor="Black" CssClass="centerHeaderText" Font-Bold="false" ForeColor="White"  />
-                     <Columns>  
-                         <asp:TemplateField>
-<ItemTemplate>
-<asp:CheckBox ID="chkEntStatus" runat="server" AutoPostBack="true"  OnCheckedChanged="chkEntStatus_CheckedChangedUW" />
-</ItemTemplate>
-</asp:TemplateField>
-                         
-                     <asp:BoundField DataField="EntityName" HeaderText="Underwriter" ReadOnly="True" SortExpression="EntityName" />  
-                         
-                    <%-- <asp:BoundField DataField="Count" DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HeaderText="Count" SortExpression="Cnt"  /> --%>
-                        
-</Columns>
-                 </asp:GridView>
-                        </div>
-               </td>
-               <td style="width:25%;">
-                   <div class="scroll">
-                 <asp:GridView runat="server" ID="grdEntityCnt" ShowHeaderWhenEmpty="true" DataKeyNames="EntityName" 
-                     AutoGenerateColumns="False" OnRowDataBound="grdEntityCnt_RowDataBound" CssClass="table table-striped table-bordered table-hover table-condensed">
-                    <HeaderStyle BackColor="Black" Font-Bold="false" CssClass="centerHeaderText"  ForeColor="White"  />
-                     <Columns>  
-                          <asp:TemplateField>
-<ItemTemplate>
-<asp:CheckBox ID="chkEnt" runat="server" AutoPostBack="true"  OnCheckedChanged="chkEntStatus_CheckedChangedUY" />
-</ItemTemplate>
-</asp:TemplateField>
-                     <asp:BoundField DataField="EntityName" HeaderText="Entity" ReadOnly="True" SortExpression="EntityName" />  
-                         <%--<asp:BoundField DataField="Cnt" DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HeaderText="Count" SortExpression="Cnt"  /> --%>
-                     
-</Columns>
-                 </asp:GridView>
-                       </div>
-                   </td>
-                                <td style="width:25%;">
+                
 
-                   <div class="scroll">
+                                <td style="width:20%;">
+
+                    <div style="display:none;" class="scroll">
                  <asp:GridView runat="server"  ID="grdStatusCount" ShowHeaderWhenEmpty="true"  DataKeyNames="EntityName" 
                     OnRowDataBound="grdStatusCount_RowDataBound" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
-                     <HeaderStyle BackColor="Black" Font-Bold="false" CssClass="centerHeaderText"  ForeColor="White"  />
+                     <HeaderStyle BackColor="Black" Font-Bold="false"  ForeColor="White"  />
                      <Columns>  
                          <asp:TemplateField>
 <ItemTemplate>
-<asp:CheckBox ID="chkEntStatus" runat="server" AutoPostBack="true"  OnCheckedChanged="chkEntStatus_CheckedChangedStatus" />
+<asp:CheckBox ID="chkEntStatus" runat="server" AutoPostBack="true" onclick="CheckSingleCheckbox(this);" OnCheckedChanged="chkEntStatus_CheckedChangedStatus" />
 </ItemTemplate>
 </asp:TemplateField>
                          
                    
-                          <asp:BoundField DataField="Status" HeaderText="Quarter-Year" SortExpression="Cnt"  /> 
+                          <asp:BoundField DataField="Status" HeaderText="Status" SortExpression="Cnt"  /> 
                         
                      <asp:BoundField DataField="Count" DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HeaderText="Count" SortExpression="Cnt"  /> 
                         
@@ -242,16 +240,7 @@ margin:5px;
                     </div>
                </td>
 
-               <td style="width:19%;">
-                   <ul style="list-style-type: none;">
-    
-                    
-                    <li><asp:Button ID="btnClear" Text="Clear Criteria" class="btn btn-primary" runat="server" OnClick="btnClear_Click"  /></li>
-                    <li style="margin-top:10px;"><asp:TextBox Visible="false" CssClass="form-control" runat="server" autocomplete="off" ID="txtProgramNumber" placeholder="At least 4 Number of Progam" TextMode="Number" ></asp:TextBox></li>
-                       <li style="margin-top:10px;"><asp:Label  runat="server"  ID="lblData"  ></asp:Label></li>
-                       </ul>
-
-               </td>
+             
                 </tr></table>
                 </ContentTemplate>
                 </asp:UpdatePanel>
@@ -262,19 +251,65 @@ margin:5px;
              
                   <table style="width:100%;">
                       <tr style="width:100%;">
+                           <td style="width:100%;">
+                       <div class="Mainscroll">
+                
+                    <asp:UpdatePanel ID="UpdatePanel3" runat="server" updatemode="Conditional">
+                <Triggers>
+            <asp:AsyncPostBackTrigger controlid="grdResult"  />
+        </Triggers>
+                <ContentTemplate>
+
+
+                    <asp:GridView runat="server" ShowHeaderWhenEmpty="true" ID="grdResult"  OnRowCommand="grdResult_RowCommand"
+                        DataKeyNames="ContractId" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
+                     <HeaderStyle BackColor="Black"  ForeColor="White"  />
+                     <Columns>  
+                         
+                         
+                     <asp:BoundField DataField="EntityName" HeaderText="Entity" ReadOnly="True" SortExpression="EntityName" />  
+                          <asp:BoundField DataField="PlatformId" HeaderText="PlatformId" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" SortExpression="Cnt"  />
+                     <asp:BoundField DataField="MasterKey" HeaderText="MasterKey" SortExpression="Cnt"  /> 
+                         <asp:BoundField DataField="Status" HeaderText="Status" ReadOnly="True" SortExpression="EntityName" />  
+                          
+                     <asp:BoundField DataField="UW" HeaderText="Underwriter" SortExpression="Cnt"  />
+                         <asp:BoundField DataField="RelUW" HeaderText="Rel Underwriter" ReadOnly="True" SortExpression="EntityName" />  
+                          
+                     <asp:BoundField DataField="FieldDiff" HeaderText="Field Difference" SortExpression="Cnt"  />
+                         <asp:BoundField DataField="REGIS" HeaderText="REGIS" ReadOnly="True" SortExpression="EntityName" />  
+                          
+                     <asp:BoundField DataField="REVO" HeaderText="REVO" SortExpression="Cnt"  />
+                      <%--<asp:TemplateField ShowHeader="False">
+            <ItemTemplate>
+                <asp:Button ID="Button1" runat="server" class="btn btn-primary btn-sm" CausesValidation="false" CommandName="OpenPopup"
+                    Text="Exc/Inc" CommandArgument='<%# Eval("RptCol")+","+Eval("PlatformId") %>' />
+            </ItemTemplate>
+        </asp:TemplateField>--%>
+                        
+</Columns>
+                        <EmptyDataTemplate>
+        <div style="text-align:center;">No records found.</div>
+    </EmptyDataTemplate>
+                 </asp:GridView>
+                   
+                
+                    </ContentTemplate>
+                        </asp:UpdatePanel>
+                             </div>
+                </td>
                            <td style="width:25%;">
-                               <div class="scroll2">
+                               <div style="display:none;" class="scroll2">
                                     <asp:UpdatePanel ID="UpdatePanel5" runat="server" updatemode="Conditional">
                 <Triggers>
             <asp:AsyncPostBackTrigger controlid="grdResult"  />
         </Triggers>
                 <ContentTemplate>
                                    <asp:GridView runat="server"  ID="grdFieldCount" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
-                      <HeaderStyle BackColor="Black" Font-Bold="false" CssClass="centerHeaderText" ForeColor="White"  />
+                      <HeaderStyle BackColor="Black" Font-Bold="false" ForeColor="White"  />
                      <Columns>  
                          <asp:TemplateField>
 <ItemTemplate>
-<asp:CheckBox ID="chkEntStatus" runat="server" AutoPostBack="true"  OnCheckedChanged="chkEntStatus_CheckedChanged1" />
+<asp:CheckBox ID="chkEntStatus" runat="server" AutoPostBack="true" onclick="CheckSingleCheckbox(this);" OnCheckedChanged="chkEntStatus_CheckedChanged1" />
 </ItemTemplate>
 </asp:TemplateField>
                          
@@ -289,52 +324,7 @@ margin:5px;
                                         </asp:UpdatePanel>
                               </div>
                           </td>
-                          <td style="width:68%;">
-                       <div class="Mainscroll">
-                
-                    <asp:UpdatePanel ID="UpdatePanel3" runat="server" updatemode="Conditional">
-                <Triggers>
-            <asp:AsyncPostBackTrigger controlid="grdResult"  />
-        </Triggers>
-                <ContentTemplate>
-
-
-                    <asp:GridView runat="server" ShowHeaderWhenEmpty="true" ID="grdResult"  OnRowCommand="grdResult_RowCommand"
-                        DataKeyNames="PlatformId" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
-                     <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
-                     <Columns>  
                          
-                         
-                     <asp:BoundField DataField="EntityName" HeaderText="Entity" ReadOnly="True" SortExpression="EntityName" />  
-                          <asp:BoundField DataField="PlatformId" HeaderText="Master Key" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" SortExpression="Cnt"  />
-                     <asp:BoundField DataField="MasterKey" HeaderText="MasterKey" SortExpression="Cnt"  /> 
-                         <asp:BoundField DataField="Status" HeaderText="Cedant" ReadOnly="True" SortExpression="EntityName" />  
-                          
-                     <asp:BoundField DataField="UW" HeaderText="Underwriter" SortExpression="Cnt"  />
-                         <asp:BoundField DataField="RelUW" HeaderText="Rel Underwriter" ReadOnly="True" SortExpression="EntityName" />  
-                          
-                     <asp:BoundField DataField="FieldDiff" HeaderText="Field Difference" SortExpression="Cnt"  />
-                         <asp:BoundField DataField="REGIS" HeaderText="REGIS" ReadOnly="True" SortExpression="EntityName" />  
-                          
-                     <asp:BoundField DataField="REVO" HeaderText="REVO" SortExpression="Cnt"  />
-                      <asp:TemplateField ShowHeader="False">
-            <ItemTemplate>
-                <asp:Button ID="Button1" runat="server" class="btn btn-primary btn-sm" CausesValidation="false" CommandName="OpenPopup"
-                    Text="Exclude" CommandArgument='<%# Eval("RptCol")+","+Eval("MasterKey") %>' />
-            </ItemTemplate>
-        </asp:TemplateField>
-                        
-</Columns>
-                        <EmptyDataTemplate>
-        <div style="text-align:center;">No records found.</div>
-    </EmptyDataTemplate>
-                 </asp:GridView>
-                   
-                
-                    </ContentTemplate>
-                        </asp:UpdatePanel>
-                             </div>
-                </td>
            
                       </tr>
                   </table>
@@ -350,7 +340,6 @@ margin:5px;
                     <asp:UpdatePanel ID="UpdatePanel4" runat="server" updatemode="Conditional">
                 <Triggers>
             <asp:AsyncPostBackTrigger controlid="grdExcluded"  />
-                     <asp:AsyncPostBackTrigger controlid="ddlReason"  />
         </Triggers>
                 <ContentTemplate>
 
@@ -364,56 +353,19 @@ margin:5px;
 
                     </div>
                   <div class="modal-body" > 
-                      <div class="row">
-                          <table style="margin:0 auto">
-                                <tr>
-                                    <td>
-                            <asp:Label ID="lblReason" Text="Reason" Font-Bold="true" runat="server"></asp:Label>
-                                        </td><td>
-                            <asp:DropDownList  ID="ddlReason" runat="server" Width="250px"  onchange="return FilterStatus()" CssClass="form-control">
-                               
-                               <%-- <asp:ListItem Value="Others">Others</asp:ListItem>--%>
-                            </asp:DropDownList>
-                                            </td>
-                                    </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                            <asp:TextBox ID="txtReason" CssClass="form-control" Width="250px" runat="server" autocomplete="off" ></asp:TextBox>
-                                        </td>
-                                    </tr>
-                                <tr>
-                                    <td></td>
-                                  <td>
-                                      <asp:Label ID="lblMsg"  runat="server" />
-                             <asp:Label ID="lblField" Font-Bold="true" runat="server" />
-                             
-                             <asp:Label ID="lblPID" runat="server" Visible="false" />
-                            <asp:Button ID="btnExc" Text="Exclude" class="btn btn-danger btn-sm" runat="server" Visible="false" OnClick="btnExc_Click"   /></li>
-                             <asp:Button ID="btnInc" Text="Include" class="btn btn-success btn-sm" runat="server" Visible="false" OnClick="btnInc_Click"   /></li>
-                                  </td>
-                                </tr>
-                           </table>
-                            <br />
-                      </div>
                         <div class="row">
                             <asp:GridView ID="grdExcluded" runat="server" OnRowCommand="grdExcluded_RowCommand"
                                 AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-condensed">
-                     <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
+                     <HeaderStyle BackColor="Black"  ForeColor="White"  />
         <Columns>
             <asp:TemplateField HeaderText="Field Desc">
                     <ItemTemplate>
                         <asp:Label ID="lblCustomerID" Text='<%#Eval("Field_desc") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Master Key">
+                <asp:TemplateField HeaderText="Platform Id">
                     <ItemTemplate>
                         <asp:Label ID="lblName" Text='<%#Eval("PlatformId") %>' runat="server" />
-                    </ItemTemplate>
-                </asp:TemplateField>
-             <asp:TemplateField HeaderText="Reason">
-                    <ItemTemplate>
-                        <asp:Label ID="lblReason" Text='<%#Eval("Reason") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>
 
@@ -429,12 +381,17 @@ margin:5px;
     </EmptyDataTemplate>
     </asp:GridView>
                             
-                            
+                            <asp:Label ID="lblMsg"  runat="server" />
+                             <asp:Label ID="lblField"  runat="server" />
+                             
+                             <asp:Label ID="lblPID" runat="server" Visible="false" />
+                            <asp:Button ID="btnExc" Text="Exclude" class="btn btn-danger btn-sm" runat="server" Visible="false" OnClick="btnExc_Click"   /></li>
+                             <asp:Button ID="btnInc" Text="Include" class="btn btn-success btn-sm" runat="server" Visible="false" OnClick="btnInc_Click"   /></li>
                         </div>
                          </div>
                     <div class="modal-footer">
                         <label id="SearchstsLbl" style="color:red"></label>
-                        <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
                         
 
 
@@ -450,8 +407,7 @@ margin:5px;
        <script lang="javascript" type="text/javascript">  
            
           
-           function ShowPopup() {
-                 document.getElementById("txtReason").style.visibility="hidden";
+             function ShowPopup() {
                  $("#myModal").modal('show');
                
     };
@@ -472,29 +428,8 @@ margin:5px;
                 }
             }
         }
-           }       
-
-           function FilterStatus()
-           {
-               var drpFilterType = document.getElementById("ddlReason");
-var selectedFilterType = drpFilterType.options[drpFilterType.selectedIndex].text;
-
-if (selectedFilterType == "Others")
-{
-
-document.getElementById("txtReason").style.visibility="visible";
-
-}
-
-else
-{
-document.getElementById("txtReason").style.visibility="hidden";
-}
-
-}
-   
-   
-     
+    }       
+         
 </script> 
     </form>
 </body>
