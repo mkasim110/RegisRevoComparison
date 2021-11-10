@@ -51,12 +51,21 @@ namespace RegisRevoComparison
                 lblData.Text = "Data as at : " +  Context.GetDataLastUpdateDate().ToString("MMM dd yyyy hh:mmtt");
                 grdUYCnt.DataSource = Context.GetRelUWCount(rdBtnRptType.SelectedValue,"","");
                 grdUYCnt.DataBind();
+                //ScriptManager.RegisterClientScriptBlock(this, typeof(string), "SearchBox", "Search_Gridview(this, 'grdUYCnt');", true);
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview('"+txtSearch.Text+"', 'grdUYCnt');", true);
+                }
                 string usernm = HttpContext.Current.User.Identity.Name.ToString();
 
                 //usernm = usernm.Substring(usernm.IndexOf("\\")+1);
                 lblUser.InnerText = usernm;
                 DtUW();
                 UpdatePanel2.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
         }
         protected void DtUW()
@@ -136,6 +145,10 @@ namespace RegisRevoComparison
 
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
             //ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
         }
@@ -175,6 +188,10 @@ namespace RegisRevoComparison
 
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
             //ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
         }
@@ -334,6 +351,10 @@ namespace RegisRevoComparison
             UpdatePanel2.Update();
             UpdatePanel5.Update();
             UpdatePanel3.Update();
+            if (txtSearch.Text != "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+            }
         }
 
 
@@ -545,6 +566,10 @@ namespace RegisRevoComparison
                 DtUW();
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
         }
 
@@ -596,6 +621,10 @@ namespace RegisRevoComparison
                 DtUW();
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+            }
+            if (txtSearch.Text != "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
             }
         }
 
@@ -1006,7 +1035,7 @@ namespace RegisRevoComparison
 
                 foreach (var prop in myDeserializedClass)
                 {
-
+                    //changes made
                     dr = dt.NewRow();
                     dr["source_system"] = prop.uw_source;
                     dr["legal_ent_code"] = "";
@@ -1034,9 +1063,18 @@ namespace RegisRevoComparison
                     dr["ExpiredDate"] = prop.Cont_Date_Expiration;
                     dr["Arrived"] = prop.Cont_Date_Arrived;
                     if (prop.cont_reins.Count > 0)
-                        dr["No_of_Reinstatement"] = prop.cont_reins[0].cont_reins_qty;
+                    {
+                        int smqty = 0;
+                        for(int isqty=0;isqty<prop.cont_reins.Count;isqty++)
+                        {
+                            smqty += Convert.ToInt32(prop.cont_reins[isqty].cont_reins_qty);
+                        }
+                        dr["No_of_Reinstatement"] = smqty.ToString();
+                    }
                     else
+                    {
                         dr["No_of_Reinstatement"] = "0";
+                    }
                     dr["OccurLimit"] = string.Format("{0:n0}", prop.Cont_100_Limit_Occurance);
                     dr["OurLimitAgg"] = string.Format("{0:n0}", prop.Cont_100_Limit_Aggregate);
                     dr["OurAggDeductible"] = string.Format("{0:n0}", prop.Cont_Our_Agg_Deductible ?? 0.00);
@@ -2372,12 +2410,15 @@ font2.SetColor(100,0,0);
             GridViewRow row = new GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal);
             for (int i = 0; i < grdUYCnt.Columns.Count; i++)
             {
-                TableHeaderCell cell = new TableHeaderCell();
-                TextBox txtSearch = new TextBox();
-                txtSearch.Attributes["placeholder"] = grdUYCnt.Columns[i].HeaderText;
-                txtSearch.CssClass = "search_textbox";
-                cell.Controls.Add(txtSearch);
-                row.Controls.Add(cell);
+                if (i != 0)
+                {
+                    TableHeaderCell cell = new TableHeaderCell();
+                    TextBox txtSearch = new TextBox();
+                    txtSearch.Attributes["placeholder"] = grdUYCnt.Columns[1].HeaderText;
+                    txtSearch.CssClass = "search_textbox";
+                    cell.Controls.Add(txtSearch);
+                    row.Controls.Add(cell);
+                }
             }
             grdUYCnt.HeaderRow.Parent.Controls.AddAt(1, row);
         }
