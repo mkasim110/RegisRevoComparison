@@ -68,6 +68,7 @@
    overflow-x: hidden;
   margin-top:10px;
 }
+     
                   .Mainscroll{
  height: 58vh;
 width:99%;
@@ -126,7 +127,9 @@ margin:5px;
                     <asp:ListItem Value="U" Selected="True">UW Report</asp:ListItem>
                      <asp:ListItem Value="A">Audit Report</asp:ListItem>
                 </asp:RadioButtonList>
-        </li></ul>
+        </li>
+        <li> <asp:textbox id="txtSearch" runat="server" autocomplete="off" CssClass="form-control" font-family="Calibri" ForeColor="Black"  Placeholder="Search Rel UW" onkeyup="Search_Gridview(this, 'grdUYCnt')"></asp:textbox></li>
+    </ul>
                   
                    
 <ul class="nav navbar-nav navbar-right">
@@ -163,7 +166,7 @@ margin:5px;
 
                  <td style="width:26%;">
                 <div class="scroll">
-                 <asp:GridView runat="server"  ID="grdUYCnt"  DataKeyNames="EntityName" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
+                 <asp:GridView runat="server"  ID="grdUYCnt"   DataKeyNames="EntityName" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
                      <HeaderStyle BackColor="Black"  Font-Bold="false" CssClass="centerHeaderText"  ForeColor="White"  />
                      <Columns>  
                          <asp:TemplateField>
@@ -304,7 +307,7 @@ margin:5px;
                      <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
                      <Columns>  
                          
-                         
+                          <asp:BoundField DataField="Qyear" HeaderText="Q-Year" ReadOnly="True" SortExpression="EntityName" />  
                      <asp:BoundField DataField="EntityName" HeaderText="Entity" ReadOnly="True" SortExpression="EntityName" />  
                           <asp:BoundField DataField="PlatformId" HeaderText="Master Key" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" SortExpression="Cnt"  />
                      <asp:BoundField DataField="MasterKey" HeaderText="MasterKey" SortExpression="Cnt"  /> 
@@ -449,7 +452,7 @@ margin:5px;
         <script src="js/bootstrap.min.js"></script>
        <script lang="javascript" type="text/javascript">  
            
-          
+         
            function ShowPopup() {
                  document.getElementById("txtReason").style.visibility="hidden";
                  $("#myModal").modal('show');
@@ -495,7 +498,27 @@ document.getElementById("txtReason").style.visibility="hidden";
    
    
      
-</script> 
+       </script> 
+        <script type="text/javascript">
+    function Search_Gridview(strKey, strGV) {
+        var strData = strKey.value.toLowerCase().split(" ");
+        var tblData = document.getElementById(strGV);
+        var rowData;
+        for (var i = 1; i < tblData.rows.length; i++) {
+            rowData = tblData.rows[i].innerHTML;
+            var styleDisplay = 'none';
+            for (var j = 0; j < strData.length; j++) {
+                if (rowData.toLowerCase().indexOf(strData[j]) >= 0)
+                    styleDisplay = '';
+                else {
+                    styleDisplay = 'none';
+                    break;
+                }
+            }
+            tblData.rows[i].style.display = styleDisplay;
+        }
+    }    
+</script>
     </form>
 </body>
 </html>

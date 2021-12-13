@@ -32,6 +32,7 @@ namespace RegisRevoComparison
     }
     public class CompareResult
     {
+        public string Qyear { get; set; }
         public string EntityName { get; set; }
         public string MasterKey { get; set; }
         public string Status { get; set; }

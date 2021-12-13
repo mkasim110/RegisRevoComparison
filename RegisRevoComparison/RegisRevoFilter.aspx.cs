@@ -51,12 +51,21 @@ namespace RegisRevoComparison
                 lblData.Text = "Data as at : " +  Context.GetDataLastUpdateDate().ToString("MMM dd yyyy hh:mmtt");
                 grdUYCnt.DataSource = Context.GetRelUWCount(rdBtnRptType.SelectedValue,"","");
                 grdUYCnt.DataBind();
+                //ScriptManager.RegisterClientScriptBlock(this, typeof(string), "SearchBox", "Search_Gridview(this, 'grdUYCnt');", true);
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview('"+txtSearch.Text+"', 'grdUYCnt');", true);
+                }
                 string usernm = HttpContext.Current.User.Identity.Name.ToString();
 
                 //usernm = usernm.Substring(usernm.IndexOf("\\")+1);
                 lblUser.InnerText = usernm;
                 DtUW();
                 UpdatePanel2.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
         }
         protected void DtUW()
@@ -132,10 +141,15 @@ namespace RegisRevoComparison
 
                 grdResult.DataSource = Context.GetCompareResult(RptType, program, ent, uy, uw, "", status);
                 grdResult.DataBind();
-                ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+                if(grdResult.Rows.Count>0)
+                    ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
 
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
             //ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
         }
@@ -175,6 +189,10 @@ namespace RegisRevoComparison
 
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
             //ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
         }
@@ -235,8 +253,9 @@ namespace RegisRevoComparison
                         dt.Rows[dt.Rows.Count - 1][i] = Regex.Replace(row.Cells[i].Text, @"<[^>]+>|&nbsp;", "").Trim();
                     }
                 }
-                dt.Columns.RemoveAt(9);
-                dt.Columns.RemoveAt(1);
+                dt.Columns.RemoveAt(10);                
+                dt.Columns.RemoveAt(2);
+                dt.Columns.RemoveAt(3);
                 var appDataPath = Server.MapPath("~/images/");
                 if (!Directory.Exists(appDataPath))
                 {
@@ -334,61 +353,105 @@ namespace RegisRevoComparison
             UpdatePanel2.Update();
             UpdatePanel5.Update();
             UpdatePanel3.Update();
+            if (txtSearch.Text != "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+            }
         }
 
 
       
         public void BindResultGrid()
         {
-           
-            var Fieldchk = false;
-            
-            string lstField = "";
-           
+
+            //this.UWTxt.Clear();
+            string lstEntity = "";
+            string lstUY = "";
+            string lstYear = "";
+            string lstQ = "";
+            var IsEnt = false;
 
 
-           // this.UWTxt.Clear();
-            List<FilterValues> fltval = CheckFieldFilters();
-            foreach (GridViewRow item in grdFieldCount.Rows)
+            string lstUW = "";
+            foreach (GridViewRow item in grdUYCnt.Rows)
             {
                 // check row is datarow
                 if (item.RowType == DataControlRowType.DataRow)
                 {
-                    CheckBox chk = (item.FindControl("chkEntStatus") as CheckBox);
+                    CheckBox chk = (item.FindControl("chkUY") as CheckBox);
                     if (chk.Checked)
                     {
-                        // lstField =(item.Cells[1].Text);
-                        // lstField += "''" + (item.Cells[1].Text) + "'',";
-                        lstField += ("'" + (item.Cells[1].Text).Trim() + "',");
-                        Fieldchk = true;
+                        lstUY += ("'" + (item.Cells[1].Text).Trim() + "',");
+                        IsEnt = true;
                         // break;
                     }
                 }
             }
-            // lstField = "''Accrual''";
-            lstField = lstField.TrimEnd(',');
-            using (var contxt = new DbAdapter())
+            lstUY = lstUY.TrimEnd(',');
+
+
+            if (IsEnt)
             {
-                if (fltval[0].lstUY.ToString() != "" || fltval[0].lstUW.ToString() != "" || fltval[0].lstStatus.ToString() != "" || fltval[0].lstField.ToString() != "")
+                BindFilters(rdBtnRptType.SelectedValue, lstEntity, lstUW, lstUY, lstYear, lstQ);
+                foreach (GridViewRow item in grdEntityCnt.Rows)
                 {
-                    grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, fltval[0].lstYear, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, lstField, fltval[0].lstStatus);
+                    // check row is datarow
+                    if (item.RowType == DataControlRowType.DataRow)
+                    {
+                        CheckBox chk = (item.FindControl("chkENT") as CheckBox);
+                        if (chk.Checked)
+                        {
+                            lstEntity += ("'" + (item.Cells[1].Text).Trim() + "',");
 
-
+                        }
+                    }
                 }
-                else
+                lstEntity = lstEntity.TrimEnd(',');
+
+                foreach (GridViewRow item in grdStatusCount.Rows)
                 {
-                    BindFilters(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUW, fltval[0].lstUY, "", fltval[0].lstStatus);
-                }
-                grdResult.DataBind();
+                    // check row is datarow
+                    if (item.RowType == DataControlRowType.DataRow)
+                    {
+                        CheckBox chk = (item.FindControl("chkEntStatus") as CheckBox);
+                        if (chk.Checked)
+                        {
 
+                            lstQ += ((item.Cells[1].Text).Trim()[1] + ",");
+                            lstYear += ((item.Cells[1].Text).Split('-').Last() + ",");
+                            //chk = true;
+                            //break;
+
+                        }
+                    }
+                }
+                lstQ = lstQ.TrimEnd(',');
+                lstYear = lstYear.TrimEnd(',');
+                using (var contxt = new DbAdapter())
+                {
+                    grdFieldCount.DataSource = contxt.GetFieldCount(rdBtnRptType.SelectedValue, lstEntity, "", lstUY, lstYear, lstQ);
+                    grdFieldCount.DataBind();
+                    grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, lstYear, lstEntity, lstUY, lstUW, "", lstQ);
+                    grdResult.DataBind();
+                }
+
+                // BindDtResult();
             }
+            else
+            {
+                BindRefresh();
+                grdResult.DataSource = null;
+                grdResult.DataBind();
+            }
+
+
+
+
+
             if (grdResult.Rows.Count > 0)
                 ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
-            else
-                BindDtResult();
-
-
             UpdatePanel3.Update();
+            UpdatePanel5.Update();
         }
         protected void grdResult_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -509,7 +572,9 @@ namespace RegisRevoComparison
                 btnInc.Visible = false;
                 lblMsg.ForeColor = Color.Green;
                 UpdatePanel4.Update();
+                
             }
+            
             ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "Popup", "ShowPopup2();", true);
         }
 
@@ -545,6 +610,10 @@ namespace RegisRevoComparison
                 DtUW();
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+                if (txtSearch.Text != "")
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                }
             }
         }
 
@@ -596,6 +665,10 @@ namespace RegisRevoComparison
                 DtUW();
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
+            }
+            if (txtSearch.Text != "")
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
             }
         }
 
@@ -876,6 +949,7 @@ namespace RegisRevoComparison
             using (var contxt = new DbAdapter())
             {
                 contxt.BlkInsertRegREVDt(dt);
+                contxt.ExcGET_REGIS_Data_SP(datafile);
                 int isExc = contxt.ExcCompSP(datafile);
             }
             dt.Rows.Clear();
@@ -1006,7 +1080,7 @@ namespace RegisRevoComparison
 
                 foreach (var prop in myDeserializedClass)
                 {
-
+                    //changes made
                     dr = dt.NewRow();
                     dr["source_system"] = prop.uw_source;
                     dr["legal_ent_code"] = "";
@@ -1034,9 +1108,18 @@ namespace RegisRevoComparison
                     dr["ExpiredDate"] = prop.Cont_Date_Expiration;
                     dr["Arrived"] = prop.Cont_Date_Arrived;
                     if (prop.cont_reins.Count > 0)
-                        dr["No_of_Reinstatement"] = prop.cont_reins[0].cont_reins_qty;
+                    {
+                        int smqty = 0;
+                        for(int isqty=0;isqty<prop.cont_reins.Count;isqty++)
+                        {
+                            smqty += Convert.ToInt32(prop.cont_reins[isqty].cont_reins_qty);
+                        }
+                        dr["No_of_Reinstatement"] = smqty.ToString();
+                    }
                     else
+                    {
                         dr["No_of_Reinstatement"] = "0";
+                    }
                     dr["OccurLimit"] = string.Format("{0:n0}", prop.Cont_100_Limit_Occurance);
                     dr["OurLimitAgg"] = string.Format("{0:n0}", prop.Cont_100_Limit_Aggregate);
                     dr["OurAggDeductible"] = string.Format("{0:n0}", prop.Cont_Our_Agg_Deductible ?? 0.00);
@@ -1061,7 +1144,7 @@ namespace RegisRevoComparison
                     dr["PC_Defict_Amt"] = prop.Cont_PC_Deficit_CF_Amt;
                     dr["PC_Calc"] = prop.Cont_PC_Calc_Flag;
                     dr["PC_percent"] = string.Format("{0:#,##0.0000}", prop.Cont_PC_Pct);
-                    dr["Sliding_Scale"] = prop.Cont_SS_Calc_Flag;
+                    dr["Sliding_Scale"] = prop.Cont_SS_Flag;
                     dr["PC_Calc_date"] = prop.Cont_PC_First_Calc_Date;
                     dr["SS_Max_Comm_pct"] = string.Format("{0:#,##0.0000}", prop.Cont_SS_Max_Commission_Pct);
                     dr["SS_Max_Loss_Ratio"] = string.Format("{0:#,##0.0000}", prop.Cont_SS_Max_Loss_Ratio);
@@ -1088,7 +1171,7 @@ namespace RegisRevoComparison
                     dr["MultiYearExpire"] = prop.multi_year_expire ?? DBNull.Value;
                     dr["MultiYearIncept"] = prop.multi_year_incept ?? DBNull.Value;
                     dr["CCFYears"] = prop.Cont_PC_Credit_CF_Years;
-                    dr["SLidingScaleFlag"] = prop.Cont_SS_Flag;
+                    dr["SLidingScaleFlag"] = prop.Cont_SS_Calc_Flag;
 
                     dr["AdjustableRate"] = string.Format("{0:#,##0.0000}", prop.Cont_Premium_Adj_Rate);
                     dr["AdjustmentBase"] = prop.Cont_Premium_Adj_XS;
@@ -1311,7 +1394,8 @@ namespace RegisRevoComparison
 
 
 
-
+            if (grdResult.Rows.Count > 0)
+                ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
             UpdatePanel3.Update();
             UpdatePanel5.Update();
         }
@@ -2043,7 +2127,7 @@ font2.SetColor(100,0,0);
                         tableb.DefaultCell.Border = 0;
                         tableb.TotalWidth = 550f;
                         tableb.LockedWidth = true;
-                        PdfPCell header = new PdfPCell(new Phrase(" MasterKey: "+ dtfinal.Rows[0]["MasterKey"]+"      UW: " + dtfinal.Rows[0]["Underwriter"]+ "      Rel UW: " + dtfinal.Rows[0]["Rel Underwriter"] +Environment.NewLine+ "    Cedant: " + dtfinal.Rows[0]["Cedant"], FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10)));
+                        PdfPCell header = new PdfPCell(new Phrase(" Q-year: " + dtfinal.Rows[0]["Q-Year"] + " MasterKey: " + dtfinal.Rows[0]["MasterKey"]+"      UW: " + dtfinal.Rows[0]["Underwriter"]+ "      Rel UW: " + dtfinal.Rows[0]["Rel Underwriter"] +Environment.NewLine+ "    Cedant: " + dtfinal.Rows[0]["Cedant"], FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10)));
                         header.Indent = 10;
                         header.HorizontalAlignment = 1;
                         header.Padding = 10f;
@@ -2175,8 +2259,7 @@ font2.SetColor(100,0,0);
         {
             try
             {
-                if (grdResult.Rows.Count > 0)
-                {
+                
                     DataTable dt = new DataTable("GridView_Data");
                     foreach (TableCell cell in grdResult.HeaderRow.Cells)
                     {
@@ -2190,7 +2273,9 @@ font2.SetColor(100,0,0);
                             dt.Rows[dt.Rows.Count - 1][i] = Regex.Replace(row.Cells[i].Text, @"<[^>]+>|&nbsp;", "").Trim();
                         }
                     }
-                    dt.Columns.RemoveAt(9);
+                    dt.Columns.RemoveAt(10);
+                   // dt.Columns.Add("Q-Year");
+                   
                     //var list = dt.AsEnumerable().Select(r => r["MasterKey"].ToString());
                     //string value ="";
                     //foreach (var vls in list)
@@ -2212,8 +2297,11 @@ font2.SetColor(100,0,0);
                             }
                         }
                     }
-                        ExportToPdf(dt);
+                if (dt.Rows.Count > 0)
+                {
+                    ExportToPdf(dt);
                 }
+                
             }
             catch (Exception ex)
             {
@@ -2372,14 +2460,19 @@ font2.SetColor(100,0,0);
             GridViewRow row = new GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal);
             for (int i = 0; i < grdUYCnt.Columns.Count; i++)
             {
-                TableHeaderCell cell = new TableHeaderCell();
-                TextBox txtSearch = new TextBox();
-                txtSearch.Attributes["placeholder"] = grdUYCnt.Columns[i].HeaderText;
-                txtSearch.CssClass = "search_textbox";
-                cell.Controls.Add(txtSearch);
-                row.Controls.Add(cell);
+                if (i != 0)
+                {
+                    TableHeaderCell cell = new TableHeaderCell();
+                    TextBox txtSearch = new TextBox();
+                    txtSearch.Attributes["placeholder"] = grdUYCnt.Columns[1].HeaderText;
+                    txtSearch.CssClass = "search_textbox";
+                    cell.Controls.Add(txtSearch);
+                    row.Controls.Add(cell);
+                }
             }
             grdUYCnt.HeaderRow.Parent.Controls.AddAt(1, row);
         }
+
+      
     }
 }
