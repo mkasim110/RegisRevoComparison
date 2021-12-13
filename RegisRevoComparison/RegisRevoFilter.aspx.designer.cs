@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RegisRevoComparison {
-    
-    
-    public partial class RegisRevoFilter {
-        
+namespace RegisRevoComparison
+{
+
+
+    public partial class RegisRevoFilter
+    {
+
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// ScriptManager1 control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
+
         /// <summary>
         /// UpdatePanel1 control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-        
+
         /// <summary>
         /// rdBtnRptType control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdBtnRptType;
-        
+
         /// <summary>
         /// txtSearch control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSearch;
-        
+
         /// <summary>
         /// BtnExport control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnExport;
-        
+
         /// <summary>
         /// btnExportPdf control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnExportPdf;
-        
+
         /// <summary>
         /// BtnRefresh control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnRefresh;
-        
+
         /// <summary>
         /// btnEntUWRpt control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEntUWRpt;
-        
+
         /// <summary>
         /// btnEntUw control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEntUw;
-        
+
         /// <summary>
         /// lblUser control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblUser;
-        
+
         /// <summary>
         /// UpdatePanel2 control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel2;
-        
+
         /// <summary>
         /// grdUYCnt control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdUYCnt;
-        
+
         /// <summary>
         /// grdUWCount control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdUWCount;
-        
+
         /// <summary>
         /// grdEntityCnt control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdEntityCnt;
-        
+
         /// <summary>
         /// grdStatusCount control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdStatusCount;
-        
+
         /// <summary>
         /// btnClear control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnClear;
-        
+
         /// <summary>
         /// txtProgramNumber control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProgramNumber;
-        
+
         /// <summary>
         /// lblData control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblData;
-        
+
         /// <summary>
         /// UpdatePanel5 control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel5;
-        
+
         /// <summary>
         /// grdFieldCount control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdFieldCount;
-        
+
         /// <summary>
         /// UpdatePanel3 control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel3;
-        
+
         /// <summary>
         /// grdResult control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdResult;
-        
+
         /// <summary>
         /// UpdatePanel4 control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel4;
-        
+
         /// <summary>
         /// lblReason control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblReason;
-        
+
         /// <summary>
         /// ddlReason control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlReason;
-        
+
         /// <summary>
         /// txtReason control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtReason;
-        
+
         /// <summary>
         /// lblMsg control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMsg;
-        
+
         /// <summary>
         /// lblField control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblField;
-        
+
         /// <summary>
         /// lblPID control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPID;
-        
+
         /// <summary>
         /// btnExc control.
         /// </summary>
@@ -290,7 +292,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnExc;
-        
+
         /// <summary>
         /// btnInc control.
         /// </summary>
@@ -299,7 +301,7 @@ namespace RegisRevoComparison {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnInc;
-        
+
         /// <summary>
         /// grdExcluded control.
         /// </summary>

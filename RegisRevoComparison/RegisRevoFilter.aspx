@@ -307,7 +307,7 @@ margin:5px;
                      <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
                      <Columns>  
                          
-                         
+                          <asp:BoundField DataField="Qyear" HeaderText="Q-Year" ReadOnly="True" SortExpression="EntityName" />  
                      <asp:BoundField DataField="EntityName" HeaderText="Entity" ReadOnly="True" SortExpression="EntityName" />  
                           <asp:BoundField DataField="PlatformId" HeaderText="Master Key" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" SortExpression="Cnt"  />
                      <asp:BoundField DataField="MasterKey" HeaderText="MasterKey" SortExpression="Cnt"  /> 
@@ -452,7 +452,7 @@ margin:5px;
         <script src="js/bootstrap.min.js"></script>
        <script lang="javascript" type="text/javascript">  
            
-          
+         
            function ShowPopup() {
                  document.getElementById("txtReason").style.visibility="hidden";
                  $("#myModal").modal('show');
@@ -498,7 +498,7 @@ document.getElementById("txtReason").style.visibility="hidden";
    
    
      
-</script> 
+       </script> 
         <script type="text/javascript">
     function Search_Gridview(strKey, strGV) {
         var strData = strKey.value.toLowerCase().split(" ");

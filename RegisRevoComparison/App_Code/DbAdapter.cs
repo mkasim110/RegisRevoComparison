@@ -179,6 +179,21 @@ namespace RegisRevoComparison
                 }
             }
         }
+
+        public void ExcGET_REGIS_Data_SP(string datafile)
+        {
+            var sql = @"sp_regrev_get_RegisData";
+            using (var dt = new DataTable())
+            {
+                using (var cmd = new SqlCommand(sql, _regisRevoCon))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandTimeout = 500;
+                    cmd.Parameters.Add(new SqlParameter("@datafile", datafile));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         public int ExcCompSP(string datafile)
         {
             var sql = @"sp_regis_revo_comp_no_view_DT_v1";
@@ -556,6 +571,7 @@ and rpt_col=@rpt_col";
                     {
                         items.Add(new CompareResult
                         {
+                            Qyear = rdr["Q-Year"].ToString(),
                             EntityName = rdr["legal_ent_code"].ToString(),
                             MasterKey = rdr["cont_master_key"].ToString(),
                             PlatformId = rdr["uw_platform_id"].ToString(),
@@ -635,6 +651,7 @@ and rpt_col=@rpt_col";
                     {
                         items.Add(new CompareResult
                         {
+                            Qyear = rdr["Q-Year"].ToString(),
                             EntityName = rdr["legal_ent_code"].ToString(),
                             MasterKey = rdr["cont_master_key"].ToString(),
                             PlatformId = rdr["uw_platform_id"].ToString(),
