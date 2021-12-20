@@ -152,8 +152,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
-    <Content Include="Default.aspx" />
-    <Content Include="EntityUW.aspx" />
     <Content Include="images\arch_logo.jpg" />
     <Content Include="images\progres_bar.gif" />
     <Content Include="js\bootstrap-select.js" />
@@ -170,7 +168,6 @@
     <Content Include="mycustompage.htm" />
     <Content Include="Param.aspx" />
     <Content Include="RegisRevoFilter.aspx" />
-    <Content Include="ReportViewer.aspx" />
     <Content Include="TextFile1.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -183,20 +180,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSet1.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="EntityUW.aspx.cs">
-      <DependentUpon>EntityUW.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EntityUW.aspx.designer.cs">
-      <DependentUpon>EntityUW.aspx</DependentUpon>
     </Compile>
     <Compile Include="Param.aspx.cs">
       <DependentUpon>Param.aspx</DependentUpon>
@@ -212,13 +195,6 @@
     </Compile>
     <Compile Include="RegisRevoFilter.aspx.designer.cs">
       <DependentUpon>RegisRevoFilter.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ReportViewer.aspx.cs">
-      <DependentUpon>ReportViewer.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ReportViewer.aspx.designer.cs">
-      <DependentUpon>ReportViewer.aspx</DependentUpon>
     </Compile>
     <Compile Include="REVOFields.cs" />
   </ItemGroup>

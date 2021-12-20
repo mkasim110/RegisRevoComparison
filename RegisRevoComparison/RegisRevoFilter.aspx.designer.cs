@@ -186,6 +186,15 @@ namespace RegisRevoComparison
         protected global::System.Web.UI.WebControls.Label lblData;
 
         /// <summary>
+        /// btnShowExcludedFields control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnShowExcludedFields;
+
+        /// <summary>
         /// UpdatePanel5 control.
         /// </summary>
         /// <remarks>
@@ -310,5 +319,77 @@ namespace RegisRevoComparison
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdExcluded;
+
+        /// <summary>
+        /// UpdatePanel6 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel6;
+
+        /// <summary>
+        /// grdExcluded1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView grdExcluded1;
+
+        /// <summary>
+        /// slcField control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label slcField;
+
+        /// <summary>
+        /// selectedFieldName2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label selectedFieldName2;
+
+        /// <summary>
+        /// GrdExclHistory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GrdExclHistory;
+
+        /// <summary>
+        /// Label1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label1;
+
+        /// <summary>
+        /// selectedFieldName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label selectedFieldName;
+
+        /// <summary>
+        /// grdHistory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView grdHistory;
     }
 }

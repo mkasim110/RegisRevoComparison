@@ -16,6 +16,14 @@ namespace RegisRevoComparison
         public string Reason { get; set; }
 
     }
+
+    public class FieldsHistory
+    {
+        public string RefreshedDated { get; set; }
+        public string FieldName { get; set; }
+        public string SourceSystem { get; set; }
+
+    }
     public class EntityCnt
     {
         public string EntityName { get; set; }

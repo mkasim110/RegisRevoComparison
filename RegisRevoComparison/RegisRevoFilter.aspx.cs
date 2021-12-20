@@ -60,6 +60,7 @@ namespace RegisRevoComparison
 
                 //usernm = usernm.Substring(usernm.IndexOf("\\")+1);
                 lblUser.InnerText = usernm;
+                btnShowExcludedFields.Visible = false;
                 DtUW();
                 UpdatePanel2.Update();
                 if (txtSearch.Text != "")
@@ -142,7 +143,7 @@ namespace RegisRevoComparison
                 grdResult.DataSource = Context.GetCompareResult(RptType, program, ent, uy, uw, "", status);
                 grdResult.DataBind();
                 if(grdResult.Rows.Count>0)
-                    ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+                    ShowingGroupingDataInGridView(grdResult.Rows,0,8);
 
                 UpdatePanel2.Update();
                 UpdatePanel5.Update();
@@ -151,7 +152,7 @@ namespace RegisRevoComparison
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
                 }
             }
-            //ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+            //ShowingGroupingDataInGridView(grdResult.Rows,0,8);
         }
         public void BindFiltersWithoutUY(string RptType, string ent, string uw, string uy, string program, string status, string field)
         {
@@ -194,7 +195,7 @@ namespace RegisRevoComparison
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
                 }
             }
-            //ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+            //ShowingGroupingDataInGridView(grdResult.Rows,0,8);
         }
 
 
@@ -449,22 +450,56 @@ namespace RegisRevoComparison
 
 
             if (grdResult.Rows.Count > 0)
-                ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+                ShowingGroupingDataInGridView(grdResult.Rows,0,8);
             UpdatePanel3.Update();
             UpdatePanel5.Update();
         }
         protected void grdResult_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName != "OpenPopup") return;
+            if (e.CommandName == "OpenPopup")
+            {
+                string field_name = (e.CommandArgument).ToString();
+                string platformId = field_name.Substring(field_name.LastIndexOf(',') + 1);
+                string rpt_col = field_name.Substring(0, field_name.IndexOf(","));
+                BindExcl(platformId, rpt_col, "Are you sure you want to Exclude the field ");
+                btnInc.Visible = false;
+                btnExc.Visible = true;
 
-            string field_name = (e.CommandArgument).ToString();
-            string platformId = field_name.Substring(field_name.LastIndexOf(',') + 1);
-            string rpt_col = field_name.Substring(0, field_name.IndexOf(","));
-            BindExcl(platformId, rpt_col, "Are you sure you want to Exclude the field ");
-            btnInc.Visible = false;
-            btnExc.Visible = true;
+                ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "Popup", "ShowPopup();", true);
+            }
+            else if (e.CommandName == "HistoryPopup")
+            {
+                string field_name = (e.CommandArgument).ToString();
+                string platformId = field_name.Substring(field_name.LastIndexOf(',') + 1);
+                string rpt_col = field_name.Substring(0, field_name.IndexOf(","));
+                selectedFieldName.Text = rpt_col;
+                BindHistory(platformId, rpt_col,"GrdHistory");
 
-            ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "Popup", "ShowPopup();", true);
+                ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "HistoryPopup", "ShowHistoryPopup();", true);
+            }
+            else return;
+
+        }
+
+        public void BindHistory(string plat_id, string FieldNm,string grdType)
+        {
+            using (var contxt = new DbAdapter())
+            {
+                if (grdType == "GrdHistory")
+                {
+                    grdHistory.DataSource = contxt.GetFieldHistory(plat_id, FieldNm);
+                    grdHistory.DataBind();
+                }
+                else if (grdType == "ExclGrdHistory")
+                {
+                    GrdExclHistory.DataSource = contxt.GetFieldHistory(plat_id, FieldNm);
+                    GrdExclHistory.DataBind();
+                }
+
+            }
+            
+            UpdatePanel6.Update();
+
 
         }
         public void BindExcl(string plat_id, string FieldNm, string Msg)
@@ -1289,7 +1324,7 @@ namespace RegisRevoComparison
                 if (fltval[0].lstUY.ToString() != "" || fltval[0].lstUW.ToString() != "" || fltval[0].lstStatus.ToString() != "" || fltval[0].lstField.ToString() != "")
                 {
                     grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, fltval[0].lstYear, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, lstField, fltval[0].lstStatus);
-                  
+                    GetExcludedData();
 
                 }
                 else
@@ -1300,7 +1335,7 @@ namespace RegisRevoComparison
 
             }
             if (grdResult.Rows.Count > 0)
-                ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+                ShowingGroupingDataInGridView(grdResult.Rows,0,8);
             else
                 BindDtResult();
 
@@ -1379,6 +1414,7 @@ namespace RegisRevoComparison
                     grdFieldCount.DataBind();
                     grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, lstYear, lstEntity, lstUY, lstUW,"", lstQ);
                     grdResult.DataBind();
+                    GetExcludedData();
                 }
                    
                    // BindDtResult();
@@ -1388,6 +1424,7 @@ namespace RegisRevoComparison
                 BindRefresh();
                 grdResult.DataSource = null;
                 grdResult.DataBind();
+               
             }
 
 
@@ -1395,13 +1432,34 @@ namespace RegisRevoComparison
 
 
             if (grdResult.Rows.Count > 0)
-                ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+                ShowingGroupingDataInGridView(grdResult.Rows,0,8);
             UpdatePanel3.Update();
             UpdatePanel5.Update();
+           
         }
 
         
-
+        void GetExcludedData()
+        {
+            List<FilterValues> fltval = CheckAllFilters();
+            using (var contxt = new DbAdapter())
+            {
+                using (var dt2 = contxt.GetResultWithExcludedDataUI(rdBtnRptType.SelectedValue, fltval[0].lstYear, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, fltval[0].lstField, fltval[0].lstStatus))
+                {
+                    if (dt2.Rows.Count > 0)
+                    {
+                        btnShowExcludedFields.Visible = true;
+                        grdExcluded1.DataSource = dt2;
+                        grdExcluded1.DataBind();
+                        UpdatePanel6.Update();
+                    }
+                    else
+                    {
+                        btnShowExcludedFields.Visible = false;
+                    }
+                }
+            }
+        }
         protected void chkEntStatus_CheckedChangedUW(object sender, EventArgs e)
         {
            // this.UWTxt.Clear();
@@ -1495,6 +1553,7 @@ namespace RegisRevoComparison
                         grdFieldCount.DataBind();
                         grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, fltval[0].lstYear, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, fltval[0].lstField, fltval[0].lstStatus);
                         grdResult.DataBind();
+                        GetExcludedData();
 
                     }
                     else
@@ -1563,6 +1622,7 @@ namespace RegisRevoComparison
                         grdResult.DataBind();
                         grdFieldCount.DataSource = contxt.GetFieldCount(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUW, fltval[0].lstUY, fltval[0].lstYear, fltval[0].lstStatus);
                         grdFieldCount.DataBind();
+                        GetExcludedData();
                     }
                     else
                     {
@@ -1586,7 +1646,7 @@ namespace RegisRevoComparison
         {
 
             if (grdResult.Rows.Count > 0)
-                ShowingGroupingDataInGridView(grdResult.Rows, 0, 6);
+                ShowingGroupingDataInGridView(grdResult.Rows,0,8);
             else
                 BindDtResult();
             UpdatePanel3.Update();
@@ -2473,6 +2533,31 @@ font2.SetColor(100,0,0);
             grdUYCnt.HeaderRow.Parent.Controls.AddAt(1, row);
         }
 
-      
+        protected void grdExcluded1_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "cmdExcludeField")
+            {
+                string field_name = (e.CommandArgument).ToString();
+                string remainder = field_name.Substring(field_name.LastIndexOf(',') + 1);
+                string last = field_name.Substring(0, field_name.IndexOf(","));
+                using (var contxt = new DbAdapter())
+                {
+                    contxt.PutExcludeField(remainder, last, "", Page.User.Identity.Name, "Delete");
+                    GetExcludedData();
+
+                }
+                ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "Popup", " ShowExclPopup2(); ", true);
+            }else if (e.CommandName == "HistoryPopup")
+            {
+                string field_name = (e.CommandArgument).ToString();
+                string platformId = field_name.Substring(field_name.LastIndexOf(',') + 1);
+                string rpt_col = field_name.Substring(0, field_name.IndexOf(","));
+                slcField.Visible = true;
+                selectedFieldName2.Text = rpt_col;
+                BindHistory(platformId, rpt_col, "ExclGrdHistory");
+
+                ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "Popup", " ShowExclPopup2(); ", true);
+            }
+        }
     }
 }

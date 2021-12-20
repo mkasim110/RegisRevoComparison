@@ -22,11 +22,7 @@ namespace RegisRevoComparison
                 _regisRevoCon = new SqlConnection(_constring);
                 _regisRevoCon.Open();
             }
-            if (_regisRevoCon2 == null)
-            {
-                _regisRevoCon2 = new SqlConnection(_constring2);
-                _regisRevoCon2.Open();
-            }
+           
         }
 
         public void Dispose()
@@ -466,6 +462,36 @@ namespace RegisRevoComparison
             }
             return items;
         }
+
+        public List<FieldsHistory> GetFieldHistory(string platformId,string field)
+        {
+            
+            var items = new List<FieldsHistory>();
+            var sql = @"[sp_regrev_get_field_history]";
+
+            using (var cmd = new SqlCommand(sql, _regisRevoCon))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@p_id", platformId));
+                cmd.Parameters.Add(new SqlParameter("@field", field));
+              
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        items.Add(new FieldsHistory
+                        {
+                            FieldName = rdr["SelectedField"].ToString(),
+                            RefreshedDated = rdr["RefreshDate"].ToString(),
+                            SourceSystem = rdr["Source_system"].ToString()
+
+
+                        });
+                    }
+                }
+            }
+            return items;
+        }
         public int PutExcludeField(string platformId,string rpt_col,string reason,string Usernme,string type)
         {
             var items = new List<ExcludedFields>();
@@ -623,6 +649,35 @@ and rpt_col=@rpt_col";
              
         }
 
+
+        public DataTable GetResultWithExcludedDataUI(string rptType, string program, string entity, string uy, string uw, string field, string status)
+        {
+
+            var sql = @"[sp_regrev_get_ExcludedData_UI]";
+
+            using (var cmd = new SqlCommand(sql, _regisRevoCon))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("@rpt_type", SqlDbType.NVarChar).Value = rptType;
+                cmd.Parameters.Add("@ent", SqlDbType.NVarChar).Value = (entity != "" ? entity : null);
+                cmd.Parameters.Add("@year", SqlDbType.NVarChar).Value = (program != "" ? program : null);
+                cmd.Parameters.Add("@reluw", SqlDbType.NVarChar).Value = (uy != "" ? uy : null);
+                cmd.Parameters.Add("@uw", SqlDbType.NVarChar).Value = (uw != "" ? uw : null);
+                cmd.Parameters.Add("@quarter", SqlDbType.NVarChar).Value = (status != "" ? status : null);
+                cmd.Parameters.Add("@reason", SqlDbType.NVarChar).Value = (field != "" ? field : null);
+                //DataSet ds = new DataSet();
+                using (var da = new SqlDataAdapter(cmd))
+                {
+                    using (var dt = new DataTable())
+                    {
+                        da.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+
+        }
         public List<CompareResult> GetCompareResultWithFields(string rptType, string program, string entity, string uy, string uw, string field, string status)
         {
             var items = new List<CompareResult>();

@@ -252,6 +252,7 @@ margin:5px;
                     <li><asp:Button ID="btnClear" Text="Clear Criteria" class="btn btn-primary" runat="server" OnClick="btnClear_Click"  /></li>
                     <li style="margin-top:10px;"><asp:TextBox Visible="false" CssClass="form-control" runat="server" autocomplete="off" ID="txtProgramNumber" placeholder="At least 4 Number of Progam" TextMode="Number" ></asp:TextBox></li>
                        <li style="margin-top:10px;"><asp:Label  runat="server"  ID="lblData"  ></asp:Label></li>
+                        <li><asp:Button ID="btnShowExcludedFields" Visible="false" Text="Show Excluded Fields" class="btn btn-primary" runat="server" OnClientClick="ShowExluPopup();"  /></li>
                        </ul>
 
                </td>
@@ -320,10 +321,17 @@ margin:5px;
                          <asp:BoundField DataField="REGIS" HeaderText="REGIS" ReadOnly="True" SortExpression="EntityName" />  
                           
                      <asp:BoundField DataField="REVO" HeaderText="REVO" SortExpression="Cnt"  />
-                      <asp:TemplateField ShowHeader="False">
+                      <asp:TemplateField HeaderText="Exclude">
             <ItemTemplate>
                 <asp:Button ID="Button1" runat="server" class="btn btn-primary btn-sm" CausesValidation="false" CommandName="OpenPopup"
                     Text="Exclude" CommandArgument='<%# Eval("RptCol")+","+Eval("MasterKey") %>' />
+            </ItemTemplate>
+        </asp:TemplateField>
+
+                          <asp:TemplateField HeaderText="History">
+            <ItemTemplate>
+                <asp:Button ID="btnHisory" runat="server" class="btn btn-primary btn-sm" CausesValidation="false" CommandName="HistoryPopup"
+                    Text="View" CommandArgument='<%# Eval("RptCol")+","+Eval("PlatformId") %>' />
             </ItemTemplate>
         </asp:TemplateField>
                         
@@ -426,6 +434,7 @@ margin:5px;
                     Text="Include" CommandArgument='<%# Eval("Field_desc")+","+Eval("PlatformId") %>' />
             </ItemTemplate>
         </asp:TemplateField>
+             
         </Columns>
                                 <EmptyDataTemplate>
         <div style="text-align:center;">No records found.</div>
@@ -447,6 +456,182 @@ margin:5px;
         </div>
                      </ContentTemplate>
                         </asp:UpdatePanel>
+
+           <asp:UpdatePanel ID="UpdatePanel6" runat="server" updatemode="Conditional">
+                <Triggers>
+            <asp:AsyncPostBackTrigger controlid="grdExcluded"  />
+                     <asp:AsyncPostBackTrigger controlid="ddlReason"  />
+        </Triggers>
+                <ContentTemplate>
+
+            <div class="modal fade" id="myExclModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h3 class="modal-title">Excluded Fields by Current Filter</h3>
+
+                    </div>
+                  <div class="modal-body" > 
+                     
+                        <div class="row">
+                            <asp:GridView ID="grdExcluded1" runat="server" OnRowCommand="grdExcluded1_RowCommand"
+                                AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-condensed">
+                     <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
+        <Columns>
+
+            <asp:TemplateField HeaderText="Field Desc">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFieldID" Text='<%#Eval("[Field Difference]") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Master Key">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("[MasterKey]") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+             <asp:TemplateField HeaderText="Reason">
+                    <ItemTemplate>
+                        <asp:Label ID="lblReason" Text='<%#Eval("Reason") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+          <asp:TemplateField HeaderText="Include">
+            <ItemTemplate>
+                <asp:Button ID="Button1" runat="server" class="btn btn-primary btn-sm" CausesValidation="false" CommandName="cmdExcludeField"
+                    Text="Include" CommandArgument='<%# Eval("[Field Difference]")+","+Eval("MasterKey") %>' />
+            </ItemTemplate>
+        </asp:TemplateField>
+             <asp:TemplateField HeaderText="History">
+            <ItemTemplate>
+                <asp:Button ID="btnHisory1" runat="server" class="btn btn-primary btn-sm" CausesValidation="false" CommandName="HistoryPopup"
+                    Text="View" CommandArgument='<%# Eval("[Field Difference]")+","+Eval("PlatformId") %>' />
+            </ItemTemplate>
+        </asp:TemplateField>
+        </Columns>
+                                <EmptyDataTemplate>
+        <div style="text-align:center;">No records found.</div>
+    </EmptyDataTemplate>
+    </asp:GridView>                           
+                        </div>
+                       <div>
+                         <table>
+                             <tr>
+                                    <td>
+                            <asp:Label ID="slcField" Text="Field Name: " Visible="false" Font-Bold="true" runat="server"></asp:Label>
+                                        </td><td>
+                             <asp:Label ID="selectedFieldName2"  Font-Bold="true" runat="server"></asp:Label>
+                                            </td>
+                                    </tr>
+                         </table>
+                     </div>
+                       <div class="row">
+                            <asp:GridView ID="GrdExclHistory" runat="server" 
+                                AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-condensed">
+                     <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
+        <Columns>
+            <asp:TemplateField HeaderText="Date Refreshed">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("RefreshedDated") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            <asp:TemplateField HeaderText="Value">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFieldID" Text='<%#Eval("FieldName") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>                
+             <asp:TemplateField HeaderText="Source System">
+                    <ItemTemplate>
+                        <asp:Label ID="lblReason" Text='<%#Eval("SourceSystem") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+          
+        </Columns>
+                                <EmptyDataTemplate>
+        <div style="text-align:center;">No records found.</div>
+    </EmptyDataTemplate>
+    </asp:GridView>
+                            
+                            
+                        </div>
+                         </div>
+                    <div class="modal-footer">
+                        <label id="SearchstsLbl1" style="color:red"></label>
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                        
+
+
+                    </div>
+            </div>
+</div>
+        </div>
+
+                    <div class="modal fade" id="myHistoryModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h3 class="modal-title">History of the Field</h3>
+
+                    </div>
+                  <div class="modal-body" > 
+                     <div>
+                         <table>
+                             <tr>
+                                    <td>
+                            <asp:Label ID="Label1" Text="Field Name: " Font-Bold="true" runat="server"></asp:Label>
+                                        </td><td>
+                             <asp:Label ID="selectedFieldName" Text="Field Name: " Font-Bold="true" runat="server"></asp:Label>
+                                            </td>
+                                    </tr>
+                         </table>
+                     </div>
+                        <div class="row">
+                            <asp:GridView ID="grdHistory" runat="server" 
+                                AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-condensed">
+                     <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
+        <Columns>
+            <asp:TemplateField HeaderText="Date Refreshed">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("RefreshedDated") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            <asp:TemplateField HeaderText="Value">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFieldID" Text='<%#Eval("FieldName") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>                
+             <asp:TemplateField HeaderText="Source System">
+                    <ItemTemplate>
+                        <asp:Label ID="lblReason" Text='<%#Eval("SourceSystem") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+          
+        </Columns>
+                                <EmptyDataTemplate>
+        <div style="text-align:center;">No records found.</div>
+    </EmptyDataTemplate>
+    </asp:GridView>
+                            
+                            
+                        </div>
+                         </div>
+                    <div class="modal-footer">
+                        
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                        
+
+
+                    </div>
+            </div>
+</div>
+        </div>
+                     </ContentTemplate>
+                        </asp:UpdatePanel>
     </div>
         
         <script src="js/bootstrap.min.js"></script>
@@ -457,14 +642,31 @@ margin:5px;
                  document.getElementById("txtReason").style.visibility="hidden";
                  $("#myModal").modal('show');
                
-    };
+           };
+           function ShowExluPopup() {
+              
+               $("#myExclModal").modal('show');
+
+           };
+           function ShowHistoryPopup() {
+
+               $("#myHistoryModal").modal('show');
+
+           };
            function ShowPopup2() {
                $("#myModal").modal('hide');
                $('body').removeClass('modal-open');
                $('.modal-backdrop').remove();
                  $("#myModal").modal('show');
                
-    };
+           };
+           function ShowExclPopup2() {
+               $("#myExclModal").modal('hide');
+               $('body').removeClass('modal-open');
+               $('.modal-backdrop').remove();
+               $("#myExclModal").modal('show');
+
+           };
          function CheckSingleCheckbox(ob) {
         var grid = ob.parentNode.parentNode.parentNode;
         var inputs = grid.getElementsByTagName("input");
