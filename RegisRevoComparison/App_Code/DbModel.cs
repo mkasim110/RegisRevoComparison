@@ -20,8 +20,9 @@ namespace RegisRevoComparison
     public class FieldsHistory
     {
         public string RefreshedDated { get; set; }
-        public string FieldName { get; set; }
-        public string SourceSystem { get; set; }
+        public string Regis { get; set; }
+        public string Revo { get; set; }
+     
 
     }
     public class EntityCnt

@@ -536,14 +536,14 @@ margin:5px;
                         <asp:Label ID="lblName" Text='<%#Eval("RefreshedDated") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>
-            <asp:TemplateField HeaderText="Value">
+            <asp:TemplateField HeaderText="REGIS">
                     <ItemTemplate>
-                        <asp:Label ID="lblFieldID" Text='<%#Eval("FieldName") %>' runat="server" />
+                        <asp:Label ID="lblFieldID" Text='<%#Eval("Regis") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>                
-             <asp:TemplateField HeaderText="Source System">
+             <asp:TemplateField HeaderText="REVO">
                     <ItemTemplate>
-                        <asp:Label ID="lblReason" Text='<%#Eval("SourceSystem") %>' runat="server" />
+                        <asp:Label ID="lblReason" Text='<%#Eval("Revo") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>
 
@@ -599,14 +599,14 @@ margin:5px;
                         <asp:Label ID="lblName" Text='<%#Eval("RefreshedDated") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>
-            <asp:TemplateField HeaderText="Value">
+            <asp:TemplateField HeaderText="REGIS">
                     <ItemTemplate>
-                        <asp:Label ID="lblFieldID" Text='<%#Eval("FieldName") %>' runat="server" />
+                        <asp:Label ID="lblFieldID" Text='<%#Eval("Regis") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>                
-             <asp:TemplateField HeaderText="Source System">
+             <asp:TemplateField HeaderText="REVO">
                     <ItemTemplate>
-                        <asp:Label ID="lblReason" Text='<%#Eval("SourceSystem") %>' runat="server" />
+                        <asp:Label ID="lblReason" Text='<%#Eval("Revo") %>' runat="server" />
                     </ItemTemplate>
                 </asp:TemplateField>
 

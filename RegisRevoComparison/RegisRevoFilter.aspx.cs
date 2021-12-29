@@ -328,7 +328,7 @@ namespace RegisRevoComparison
         protected void BtnRefresh_Click(object sender, EventArgs e)
         {
             try
-            {   // getnewmethod();
+            {    //getnewmethod();
                 CallAsysnAsync();
                 BindRefresh();
 
@@ -984,7 +984,7 @@ namespace RegisRevoComparison
             using (var contxt = new DbAdapter())
             {
                 contxt.BlkInsertRegREVDt(dt);
-                contxt.ExcGET_REGIS_Data_SP(datafile);
+                //contxt.ExcGET_REGIS_Data_SP(datafile);
                 int isExc = contxt.ExcCompSP(datafile);
             }
             dt.Rows.Clear();

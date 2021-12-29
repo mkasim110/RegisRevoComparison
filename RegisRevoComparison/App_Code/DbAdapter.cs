@@ -176,20 +176,20 @@ namespace RegisRevoComparison
             }
         }
 
-        public void ExcGET_REGIS_Data_SP(string datafile)
-        {
-            var sql = @"sp_regrev_get_RegisData";
-            using (var dt = new DataTable())
-            {
-                using (var cmd = new SqlCommand(sql, _regisRevoCon))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = 500;
-                    cmd.Parameters.Add(new SqlParameter("@datafile", datafile));
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
+        //public void ExcGET_REGIS_Data_SP(string datafile)
+        //{
+        //    var sql = @"sp_regrev_get_RegisData";
+        //    using (var dt = new DataTable())
+        //    {
+        //        using (var cmd = new SqlCommand(sql, _regisRevoCon))
+        //        {
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.CommandTimeout = 500;
+        //            cmd.Parameters.Add(new SqlParameter("@datafile", datafile));
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
+        //}
         public int ExcCompSP(string datafile)
         {
             var sql = @"sp_regis_revo_comp_no_view_DT_v1";
@@ -473,7 +473,7 @@ namespace RegisRevoComparison
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@p_id", platformId));
-                cmd.Parameters.Add(new SqlParameter("@field", field));
+                cmd.Parameters.Add(new SqlParameter("@field", "'" + field.TrimEnd() + "'"));
               
                 using (var rdr = cmd.ExecuteReader())
                 {
@@ -481,9 +481,9 @@ namespace RegisRevoComparison
                     {
                         items.Add(new FieldsHistory
                         {
-                            FieldName = rdr["SelectedField"].ToString(),
-                            RefreshedDated = rdr["RefreshDate"].ToString(),
-                            SourceSystem = rdr["Source_system"].ToString()
+                            Regis = rdr["Regis"].ToString(),
+                            Revo = rdr["Revo"].ToString(),                            
+                            RefreshedDated = rdr["RefreshDate"].ToString()                            
 
 
                         });
