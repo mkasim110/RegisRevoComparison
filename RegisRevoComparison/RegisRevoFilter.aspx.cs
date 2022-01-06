@@ -31,7 +31,7 @@ namespace RegisRevoComparison
         DataRow dr;
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
             if (!Page.IsPostBack && !Page.IsCallback)
             {
                 BindRefresh();
@@ -40,9 +40,12 @@ namespace RegisRevoComparison
             System.Web.UI.ScriptManager.GetCurrent(this).RegisterPostBackControl(BtnExport);
             System.Web.UI.ScriptManager.GetCurrent(this).RegisterPostBackControl(btnExportPdf);
             System.Web.UI.ScriptManager.GetCurrent(this).RegisterPostBackControl(btnEntUw);
-            System.Web.UI.ScriptManager.GetCurrent(this).RegisterPostBackControl(btnEntUWRpt);
+           
+            
         }
-
+        /// <summary>
+        /// Refresh All the Grids
+        /// </summary>
         public void BindRefresh()
         {
 
@@ -61,14 +64,18 @@ namespace RegisRevoComparison
                 //usernm = usernm.Substring(usernm.IndexOf("\\")+1);
                 lblUser.InnerText = usernm;
                 btnShowExcludedFields.Visible = false;
+                btnShowMatchFields.Visible = false;
                 DtUW();
-                UpdatePanel2.Update();
+               
                 if (txtSearch.Text != "")
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.Text + ", 'grdUYCnt');", true);
                 }
+                UpdatePanel2.Update();
             }
         }
+
+        //Bind Header to Empty Grid
         protected void DtUW()
         {
             DataTable table = new DataTable();
@@ -89,8 +96,7 @@ namespace RegisRevoComparison
             table.Columns.Add(new DataColumn("REGIS", typeof(string)));
             table.Columns.Add(new DataColumn("REVO", typeof(string)));
 
-            grdUWCount.DataSource = table;
-            grdUWCount.DataBind();
+           
             grdEntityCnt.DataSource = table;
             grdEntityCnt.DataBind();
             grdFieldCount.DataSource = table;
@@ -100,7 +106,7 @@ namespace RegisRevoComparison
             grdResult.DataSource = table;
             grdResult.DataBind();
         }
-
+        //Bind Header to the Grid
         protected void BindDtResult()
         {
             DataTable table = new DataTable();
@@ -126,6 +132,17 @@ namespace RegisRevoComparison
            // grdResult.DataBind();
             UpdatePanel3.Update();
         }
+
+        /// <summary>
+        /// Bind Data to all the Grids upon the User selection
+        /// </summary>
+        /// <param name="RptType"></param>
+        /// <param name="ent"></param>
+        /// <param name="uw"></param>
+        /// <param name="uy"></param>
+        /// <param name="program"></param>
+        /// <param name="status"></param>
+
         public void BindFilters(string RptType, string ent, string uw, string uy, string program, string status)
         {
             using (var Context = new DbAdapter())
@@ -134,9 +151,7 @@ namespace RegisRevoComparison
                 grdEntityCnt.DataSource = Context.GetEntityCount(RptType, uy,uw);
                 grdEntityCnt.DataBind();
                 grdStatusCount.DataSource = Context.GetStatusCount(RptType, ent, uy, uw);
-                grdStatusCount.DataBind();
-                grdUWCount.DataSource = Context.GetUWCount(RptType, ent, uy);
-                grdUWCount.DataBind();
+                grdStatusCount.DataBind();               
                 grdFieldCount.DataSource = Context.GetFieldCount(RptType, ent, uw, uy, program, status);
                 grdFieldCount.DataBind();
 
@@ -154,51 +169,9 @@ namespace RegisRevoComparison
             }
             //ShowingGroupingDataInGridView(grdResult.Rows,0,8);
         }
-        public void BindFiltersWithoutUY(string RptType, string ent, string uw, string uy, string program, string status, string field)
-        {
-            using (var Context = new DbAdapter())
-            {
+       
 
-                if (status == "")
-                {
-                    grdStatusCount.DataSource = Context.GetStatusCount(RptType, ent, uy, uw);
-                    grdStatusCount.DataBind();
-                    grdFieldCount.DataSource = Context.GetFieldCount(RptType, ent, uw, uy, program, status);
-                    grdFieldCount.DataBind();
-                }
-                if (uw == "")
-                {
-                    grdUWCount.DataSource = Context.GetUWCount(RptType, ent, uy);
-                    grdUWCount.DataBind();
-                    grdStatusCount.DataSource = Context.GetStatusCount(RptType, ent, uy, uw);
-                    grdStatusCount.DataBind();
-                    grdFieldCount.DataSource = Context.GetFieldCount(RptType, ent, uw, uy, program, status);
-                    grdFieldCount.DataBind();
-                }
-
-                if (uy != "")
-                {
-                    grdFieldCount.DataSource = Context.GetFieldCount(RptType, ent, uw, uy, program, status);
-                    grdFieldCount.DataBind();
-                }
-                if (field == "")
-                {
-                    grdFieldCount.DataSource = Context.GetFieldCount(RptType, ent, uw, uy, program, status);
-                    grdFieldCount.DataBind();
-                }
-
-
-                UpdatePanel2.Update();
-                UpdatePanel5.Update();
-                if (txtSearch.Text != "")
-                {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
-                }
-            }
-            //ShowingGroupingDataInGridView(grdResult.Rows,0,8);
-        }
-
-
+        //Grouping the Result Grid
         void ShowingGroupingDataInGridView(GridViewRowCollection gridViewRows, int startIndex, int totalColumns)
         {
             if (totalColumns == 0) return;
@@ -237,6 +210,8 @@ namespace RegisRevoComparison
             lst.Clear();
         }
 
+
+        //Export the Result to Excel
         protected void BtnExport_Click(object sender, EventArgs e)
         {
             if (grdResult.Rows.Count > 0)
@@ -325,10 +300,16 @@ namespace RegisRevoComparison
             //
         }
 
+        /// <summary>
+        /// Pull the REVO and REGIS Latest Data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
         protected void BtnRefresh_Click(object sender, EventArgs e)
         {
             try
-            {    //getnewmethod();
+            {   
                 CallAsysnAsync();
                 BindRefresh();
 
@@ -341,11 +322,12 @@ namespace RegisRevoComparison
             }
         }
 
-        private bool tryMethod()
-        {
-            throw new NotImplementedException();
-        }
 
+        /// <summary>
+        /// Switch the Report Type
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rdBtnRptType_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindRefresh();
@@ -360,8 +342,9 @@ namespace RegisRevoComparison
             }
         }
 
-
-      
+        /// <summary>
+        /// Bind the Result Grid during Exclude or Include
+        /// </summary>
         public void BindResultGrid()
         {
 
@@ -454,6 +437,13 @@ namespace RegisRevoComparison
             UpdatePanel3.Update();
             UpdatePanel5.Update();
         }
+
+
+        /// <summary>
+        /// View History and Exclude Fields 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void grdResult_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "OpenPopup")
@@ -481,6 +471,13 @@ namespace RegisRevoComparison
 
         }
 
+
+        /// <summary>
+        /// Bind History to the Grid
+        /// </summary>
+        /// <param name="plat_id"></param>
+        /// <param name="FieldNm"></param>
+        /// <param name="grdType"></param>
         public void BindHistory(string plat_id, string FieldNm,string grdType)
         {
             using (var contxt = new DbAdapter())
@@ -502,6 +499,9 @@ namespace RegisRevoComparison
 
 
         }
+
+
+        //Bind Excluded Data
         public void BindExcl(string plat_id, string FieldNm, string Msg)
         {
             using (var contxt = new DbAdapter())
@@ -522,11 +522,12 @@ namespace RegisRevoComparison
 
 
         }
-        protected void btnExclude_Click(object sender, EventArgs e)
-        {
-
-        }
-
+       
+        /// <summary>
+        /// Exclude the Fields 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void grdExcluded_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName != "cmdExcludeField") return;
@@ -613,99 +614,29 @@ namespace RegisRevoComparison
             ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "Popup", "ShowPopup2();", true);
         }
 
+
+        /// <summary>
+        /// Clear all the Current selectios in the Grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnClear_Click(object sender, EventArgs e)
         {
+            txtSearch.Text = "";
             BindRefresh();
             grdResult.DataSource = null;
             grdResult.DataBind();
             UpdatePanel3.Update();
+            UpdatePanel1.Update();
             UpdatePanel5.Update();
         }
+        
 
-        protected void chkEnt_CheckedChanged(object sender, EventArgs e)
-        {
-            var hasChecked = false;
-            foreach (GridViewRow item in grdEntityCnt.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkEnt") as CheckBox);
-                    if (chk.Checked)
-                    {
-                        BindFilters(rdBtnRptType.SelectedValue, item.Cells[1].Text, "", "", "", "");
-                        hasChecked = true;
-                        break;
-                    }
-
-                }
-            }
-            if (!hasChecked)
-            {
-                DtUW();
-                UpdatePanel2.Update();
-                UpdatePanel5.Update();
-                if (txtSearch.Text != "")
-                {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
-                }
-            }
-        }
-
-        protected void chkUY_CheckedChanged(object sender, EventArgs e)
-        {
-            var hasUYChecked = false;
-            var hasEntChecked = false;
-            var Ent = "";
-            var UY = "";
-
-            foreach (GridViewRow item in grdEntityCnt.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkEnt") as CheckBox);
-                    if (chk.Checked)
-                    {
-                        Ent = item.Cells[1].Text;
-                        hasEntChecked = true;
-                        break;
-                    }
-
-                }
-            }
-            foreach (GridViewRow item in grdUYCnt.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkUY") as CheckBox);
-                    if (chk.Checked)
-                    {
-                        // BindFilters(rdBtnRptType.SelectedValue,Ent,"",item.Cells[1].Text);
-                        hasUYChecked = true;
-                        break;
-                    }
-
-                }
-            }
-            if (!hasUYChecked)
-            {
-
-                UpdatePanel2.Update();
-                UpdatePanel5.Update();
-            }
-            if (!hasEntChecked)
-            {
-                DtUW();
-                UpdatePanel2.Update();
-                UpdatePanel5.Update();
-            }
-            if (txtSearch.Text != "")
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "Popup", "Search_Gridview("+txtSearch.ClientID+", 'grdUYCnt');", true);
-            }
-        }
+      /// <summary>
+      /// API PULL from REVO
+      /// </summary>
+      /// <param name="request"></param>
+      /// <returns></returns>
 
         #region APIPULL
         private async static Task<IRestResponse> NewMethod(RestRequest request)
@@ -715,13 +646,7 @@ namespace RegisRevoComparison
             var cancellationTokenSource = new CancellationTokenSource();
             return await client.ExecuteAsync(request, cancellationTokenSource.Token);
         }
-        private async static Task<IRestResponse> NewMethod2(RestRequest request)
-        {
-            var client = new RestClient(System.Web.Configuration.WebConfigurationManager.AppSettings["ApiURL"]);
-            client.Authenticator = new NtlmAuthenticator(System.Web.Configuration.WebConfigurationManager.AppSettings["ApiUserName"], System.Web.Configuration.WebConfigurationManager.AppSettings["ApiPassword"]);
-            return await client.ExecuteAsync(request);
-        }
-
+      
 
         public async void CallAsysnAsync()
         {
@@ -757,21 +682,12 @@ namespace RegisRevoComparison
                     tasks5.Add(NewMethod(request));
                 if (i >= 25000 && i < 30000)
                     tasks6.Add(NewMethod(request));
+                if (i >= 30000 && i < 35000)
+                    tasks7.Add(NewMethod(request));
+                if (i >= 35000 && i < 40000)
+                    tasks8.Add(NewMethod(request));
 
             }
-            //for (int i = 10000; i < 20000; i = i + 500)
-            //{
-
-            //    request = new RestRequest("/" + i, Method.GET);
-            //    tasks2.Add(NewMethod(request));
-            //}
-            //for (int i = 20000; i < 30000; i = i + 500)
-            //{
-
-            //    request = new RestRequest("/" + i, Method.GET);
-            //    tasks3.Add(NewMethod(request));
-            //}
-
 
             var result = await Task.WhenAll(tasks);
             var result2 = await Task.WhenAll(tasks2);
@@ -779,13 +695,10 @@ namespace RegisRevoComparison
             var result4 = await Task.WhenAll(tasks4);
             var result5 = await Task.WhenAll(tasks5);
             var result6 = await Task.WhenAll(tasks6);
+            var result7 = await Task.WhenAll(tasks7);
+            var result8 = await Task.WhenAll(tasks8);
 
             var queryResult1 = "[";
-
-
-
-
-
 
             using (var contxt = new DbAdapter())
             {
@@ -812,7 +725,7 @@ namespace RegisRevoComparison
                 else
                 {
                     request = new RestRequest(lst.Result.ResponseUri.ToString(), Method.GET);
-                    taskExcp.Add(NewMethod2(request));
+                    taskExcp.Add(NewMethod(request));
                 }
             }
             if (tasks2.Count > 0)
@@ -953,10 +866,10 @@ namespace RegisRevoComparison
 
                 }
             }
-            if (taskExcp.Count > 0)
+            if (tasks7.Count > 0)
             {
-                var resultExp2 = await Task.WhenAll(taskExcp);
-                foreach (var lst in taskExcp)
+                //var resultExp2 = await Task.WhenAll(taskExcp2);
+                foreach (var lst in tasks7)
                 {
                     if (lst.Result.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -981,10 +894,65 @@ namespace RegisRevoComparison
 
                 }
             }
+            if (tasks8.Count > 0)
+            {
+               
+                foreach (var lst in tasks8)
+                {
+                    if (lst.Result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        if (lst.Result.Content.Length > 2)
+                        {
+                            InstDataToRegis(lst.Result.Content, datafile);
+                        }
+
+                        else
+                        {
+                            queryResult1 += "]";
+                            break;
+
+
+                        }
+                    }
+                    else
+                    {
+                        request = new RestRequest(lst.Result.ResponseUri.ToString(), Method.GET);
+                        taskExcp.Add(NewMethod(request));
+                    }
+
+                }
+            }
+            if (taskExcp.Count > 0)
+            {
+                var resultExp2 = await Task.WhenAll(taskExcp);
+                foreach (var lst in taskExcp)
+                {
+                    if (lst.Result.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        if (lst.Result.Content.Length > 2)
+                        {
+                            InstDataToRegis(lst.Result.Content, datafile);
+                        }
+
+                        else
+                        {
+                            queryResult1 += "]";
+                            break;
+
+
+                        }
+                    }
+                    else
+                    {
+                        request = new RestRequest(lst.Result.ResponseUri.ToString(), Method.GET);
+                        taskExcp2.Add(NewMethod(request));
+                    }
+
+                }
+            }
             using (var contxt = new DbAdapter())
             {
-                contxt.BlkInsertRegREVDt(dt);
-                //contxt.ExcGET_REGIS_Data_SP(datafile);
+                contxt.BlkInsertRegREVDt(dt);              
                 int isExc = contxt.ExcCompSP(datafile);
             }
             dt.Rows.Clear();
@@ -1001,110 +969,12 @@ namespace RegisRevoComparison
             throw new NotImplementedException();
         }
 
-        public async void getnewmethod()
-        {
-            var httpClientHandler = new HttpClientHandler()
-            {
-
-                Credentials = new NetworkCredential("Regis_service", "Arl441bm!") // real password instead of "pw"
-
-            };
-            var client = new System.Net.Http.HttpClient(httpClientHandler);
-            client.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            client.BaseAddress = new Uri("http://bmrevoapp1-uat:8080/api/RegisTransformer/GetAllContracts/1000");
-            var list = new List<string>();
-            var list2 = new List<string>();
-            var list3 = new List<string>();
-            var list4 = new List<string>();
-            var list5 = new List<string>();
-
-            var listResults = new List<string>();
-            for (int i = 0; i < 40000; i = i + 500)
-            {
-
-                if (i >= 0 && i < 5000)
-                    list.Add("http://bmrevoapp1-uat:8080/api/RegisTransformer/GetAllContracts/" + i);
-                if (i >= 5000 && i < 10000)
-                    list2.Add("http://bmrevoapp1-uat:8080/api/RegisTransformer/GetAllContracts/" + i);
-                if (i >= 10000 && i < 15000)
-                    list3.Add("http://bmrevoapp1-uat:8080/api/RegisTransformer/GetAllContracts/" + i);
-                if (i >= 15000 && i < 20000)
-                    list4.Add("http://bmrevoapp1-uat:8080/api/RegisTransformer/GetAllContracts/" + i);
-                if (i >= 20000 && i < 25000)
-                    list5.Add("http://bmrevoapp1-uat:8080/api/RegisTransformer/GetAllContracts/" + i);
-
-
-
-            }
-            var tasks = new List<Task>();
-            var tasks2 = new List<Task>();
-            var tasks3 = new List<Task>();
-            var tasks4 = new List<Task>();
-            var tasks5 = new List<Task>();
-            foreach (var post in list)
-            {
-                async Task<string> func()
-                {
-                    var response = await client.GetAsync(post);
-                    return await response.Content.ReadAsStringAsync();
-                }
-                tasks.Add(func());
-            }
-
-            foreach (var post in list2)
-            {
-                async Task<string> func()
-                {
-                    var response = await client.GetAsync(post);
-                    return await response.Content.ReadAsStringAsync();
-                }
-                tasks2.Add(func());
-            }
-            foreach (var post in list3)
-            {
-                async Task<string> func()
-                {
-                    var response = await client.GetAsync(post);
-                    return await response.Content.ReadAsStringAsync();
-                }
-                tasks3.Add(func());
-            }
-            foreach (var post in list4)
-            {
-                async Task<string> func()
-                {
-                    var response = await client.GetAsync(post);
-                    return await response.Content.ReadAsStringAsync();
-                }
-                tasks4.Add(func());
-            }
-            foreach (var post in list5)
-            {
-                async Task<string> func()
-                {
-                    var response = await client.GetAsync(post);
-                    return await response.Content.ReadAsStringAsync();
-                }
-                tasks5.Add(func());
-            }
-            await Task.WhenAll(tasks);
-            await Task.WhenAll(tasks2);
-            await Task.WhenAll(tasks3);
-            await Task.WhenAll(tasks4);
-            await Task.WhenAll(tasks5);
-
-            var postResponses = new List<string>();
-
-            foreach (var t in tasks)
-            {
-                var postResponse = t.Status.ToString(); //t.Result would be okay too.
-                postResponses.Add(postResponse);
-                Console.WriteLine(postResponse);
-            }
-
-        }
-
+      
+        /// <summary>
+        /// Insert all the data which is pulled from REVO API
+        /// </summary>
+        /// <param name="stops1"></param>
+        /// <param name="datafile"></param>
         public void InstDataToRegis(string stops1, string datafile)
         {
             var stops = JArray.Parse(stops1);
@@ -1284,17 +1154,16 @@ namespace RegisRevoComparison
             }
         }
         #endregion
-
+        /// <summary>
+        /// Field Grid Selection Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void chkEntStatus_CheckedChanged1(object sender, EventArgs e)
         {
-            //var uychk = false;
-            //var uwchk = false;
-            //var statuschk = false;
+            
             var Fieldchk = false;
-            //string lstEntity = "";
-            //string lstUY = "";
-            //string lstProgram = "";
-            //string lstStatus = "";
+           
             string lstField = "";
            
            
@@ -1325,6 +1194,7 @@ namespace RegisRevoComparison
                 {
                     grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, fltval[0].lstYear, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, lstField, fltval[0].lstStatus);
                     GetExcludedData();
+                    GetMatchData();
 
                 }
                 else
@@ -1342,10 +1212,15 @@ namespace RegisRevoComparison
 
             UpdatePanel3.Update();
         }
-
+        /// <summary>
+        /// Rel UW Selection Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void chkEnt_CheckedChanged1(object sender, EventArgs e)
         {
-           //this.UWTxt.Clear();
+            
+            //this.UWTxt.Clear();
             string lstEntity = "";
             string lstUY = "";
             string lstYear = "";
@@ -1415,6 +1290,7 @@ namespace RegisRevoComparison
                     grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, lstYear, lstEntity, lstUY, lstUW,"", lstQ);
                     grdResult.DataBind();
                     GetExcludedData();
+                    GetMatchData();
                 }
                    
                    // BindDtResult();
@@ -1438,7 +1314,9 @@ namespace RegisRevoComparison
            
         }
 
-        
+        /// <summary>
+        /// Get all the exculded Data with selected Filter
+        /// </summary>
         void GetExcludedData()
         {
             List<FilterValues> fltval = CheckAllFilters();
@@ -1460,42 +1338,38 @@ namespace RegisRevoComparison
                 }
             }
         }
-        protected void chkEntStatus_CheckedChangedUW(object sender, EventArgs e)
+
+        /// <summary>
+        /// Get Matched data with selected Filters
+        /// </summary>
+        void GetMatchData()
         {
-           // this.UWTxt.Clear();
-            List<FilterValues> fltval = CheckFilters();
-            if (fltval[0].lstUY.ToString() != "")
+            List<FilterValues> fltval = CheckAllFilters();
+            using (var contxt = new DbAdapter())
             {
-                using (var contxt = new DbAdapter())
+               using (var dt3 = contxt.GetMatchResult(rdBtnRptType.SelectedValue, fltval[0].lstYear, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, fltval[0].lstField, fltval[0].lstStatus))
                 {
-                    if (fltval[0].lstUY.ToString() != "" || fltval[0].lstUW.ToString() != "" || fltval[0].lstStatus.ToString() != "" || fltval[0].lstField.ToString() != "")
+                    if (dt3.Rows.Count > 0)
                     {
-                        grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, "", fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, fltval[0].lstField, fltval[0].lstStatus);
-                        grdResult.DataBind();
+                        btnShowMatchFields.Visible = true;
+                        grdMatch.DataSource = dt3;
+                        grdMatch.DataBind();
+                        lblLastRefreshedDt.Text = contxt.GetDataLastUpdateDate().ToString("MMM dd yyyy hh:mmtt");
+                        UpdatePanel6.Update();
                     }
                     else
                     {
-                        BindFilters(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUW, fltval[0].lstUY, "", fltval[0].lstStatus);
+                        btnShowMatchFields.Visible = false;
                     }
-                    grdResult.DataBind();
-
-                    grdFieldCount.DataSource = contxt.GetFieldCount(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUW, fltval[0].lstUY, fltval[0].lstYear, fltval[0].lstStatus);
-                    grdFieldCount.DataBind();
-                    grdEntityCnt.DataSource = contxt.GetEntityCount(rdBtnRptType.SelectedValue, fltval[0].lstUY, fltval[0].lstUW);
-                    grdEntityCnt.DataBind();
-                    grdStatusCount.DataSource = contxt.GetStatusCount(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW);
-                    grdStatusCount.DataBind();
                 }
             }
-            else
-            {
-                BindRefresh();
-                grdResult.DataSource = null;
-                grdResult.DataBind();
-            }
-            DefaultBind();
         }
-
+       
+        /// <summary>
+        /// Entity Grid SelectionEvent
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void chkEntStatus_CheckedChangedUY(object sender, EventArgs e)
         {
             //this.UWTxt.Clear();
@@ -1504,12 +1378,6 @@ namespace RegisRevoComparison
             {
                 using (var contxt = new DbAdapter())
                 {
-                    
-
-
-                    grdUWCount.DataSource = contxt.GetUWCount(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUY);
-                    grdUWCount.DataBind();
-                   
                     grdStatusCount.DataSource = contxt.GetStatusCount(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW);
                     grdStatusCount.DataBind();
 
@@ -1554,6 +1422,7 @@ namespace RegisRevoComparison
                         grdResult.DataSource = contxt.GetCompareResult(rdBtnRptType.SelectedValue, fltval[0].lstYear, fltval[0].lstENT, fltval[0].lstUY, fltval[0].lstUW, fltval[0].lstField, fltval[0].lstStatus);
                         grdResult.DataBind();
                         GetExcludedData();
+                        GetMatchData();
 
                     }
                     else
@@ -1571,7 +1440,11 @@ namespace RegisRevoComparison
             }
             DefaultBind();
         }
-
+        /// <summary>
+        /// Quarter-Year Selection Event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void chkEntStatus_CheckedChangedStatus(object sender, EventArgs e)
         {
             this.StatusTxt.Clear();
@@ -1613,8 +1486,7 @@ namespace RegisRevoComparison
                     }
                     fltval[0].lstStatus = fltval[0].lstStatus.TrimEnd(',');
                     fltval[0].lstYear = fltval[0].lstYear.TrimEnd(',');
-                    grdUWCount.DataSource = contxt.GetUWCount(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUY);
-                    grdUWCount.DataBind();
+                   
                    
                     if (fltval[0].lstUY.ToString() != "" || fltval[0].lstUW.ToString() != "" || fltval[0].lstStatus.ToString() != "" || fltval[0].lstField.ToString() != "")
                     {
@@ -1623,6 +1495,7 @@ namespace RegisRevoComparison
                         grdFieldCount.DataSource = contxt.GetFieldCount(rdBtnRptType.SelectedValue, fltval[0].lstENT, fltval[0].lstUW, fltval[0].lstUY, fltval[0].lstYear, fltval[0].lstStatus);
                         grdFieldCount.DataBind();
                         GetExcludedData();
+                        GetMatchData();
                     }
                     else
                     {
@@ -1641,7 +1514,7 @@ namespace RegisRevoComparison
             }
             DefaultBind();
         }
-
+        //Initialize Default Binding to Grids
         public void DefaultBind()
         {
 
@@ -1652,6 +1525,11 @@ namespace RegisRevoComparison
             UpdatePanel3.Update();
             UpdatePanel5.Update();
         }
+        /// <summary>
+        /// Checking the selection of Filters
+        /// </summary>
+        /// <returns></returns>
+        #region CheckFilters
         public List<FilterValues> CheckFilters()
         {
             List<FilterValues> fltVal = new List<FilterValues>();
@@ -1796,33 +1674,7 @@ namespace RegisRevoComparison
             }
             lstUY = lstUY.TrimEnd(',');
            // this.UWTxt.Clear();
-            foreach (GridViewRow item in grdUWCount.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chkSelect = (item.FindControl("chkEntStatus") as CheckBox);
-                    if (chkSelect != null)
-                    {
-                        string uwtxt = item.Cells[1].Text.Trim();
-
-
-                        if (chkSelect.Checked && !this.UWTxt.Contains(uwtxt))
-                        {
-
-                            this.UWTxt.Add(uwtxt);
-                            lstUW += ("'" + item.Cells[1].Text.Trim() + "',");
-                            uwchk = true;
-                            // break;
-                        }
-                        else if (!chkSelect.Checked && this.UWTxt.Contains(uwtxt))
-                        {
-                            this.UWTxt.Remove(uwtxt);
-                        }
-
-                    }
-                }
-            }
+           
             lstUW = lstUW.TrimEnd(',');
             foreach (GridViewRow item in grdEntityCnt.Rows)
             {
@@ -1881,6 +1733,116 @@ namespace RegisRevoComparison
             return fltVal;
         }
 
+        public List<FilterValues> CheckAllFilters()
+        {
+            List<FilterValues> fltVal = new List<FilterValues>();
+            var uychk = false;
+            var uwchk = false;
+            var Entchk = false;
+            var Fieldchk = false;
+            string lstEntity = "";
+            string lstUY = "";
+            string lstYear = "";
+            string lstStatus = "";
+            string lstField = "";
+            string lstUW = "";
+            foreach (GridViewRow item in grdUYCnt.Rows)
+            {
+                // check row is datarow
+                if (item.RowType == DataControlRowType.DataRow)
+                {
+                    CheckBox chk = (item.FindControl("chkUY") as CheckBox);
+                    if (chk.Checked)
+                    {
+                        lstUY += ("'" + (item.Cells[1].Text).Trim() + "',");
+                        //break;
+                    }
+                }
+            }
+            lstUY = lstUY.TrimEnd(',');
+            // this.UWTxt.Clear();
+           
+            lstUW = lstUW.TrimEnd(',');
+            foreach (GridViewRow item in grdEntityCnt.Rows)
+            {
+                // check row is datarow
+                if (item.RowType == DataControlRowType.DataRow)
+                {
+                    CheckBox chk = (item.FindControl("chkENT") as CheckBox);
+                    if (chk.Checked)
+                    {
+                        lstEntity += ("'" + (item.Cells[1].Text).Trim() + "',");
+                        Entchk = true;
+                        //break;
+
+                    }
+                }
+            }
+            lstEntity = lstEntity.TrimEnd(',');
+
+            foreach (GridViewRow item in grdStatusCount.Rows)
+            {
+                // check row is datarow
+                if (item.RowType == DataControlRowType.DataRow)
+                {
+                    CheckBox chk = (item.FindControl("chkEntStatus") as CheckBox);
+                    if (chk.Checked)
+                    {
+
+                        lstStatus += ((item.Cells[1].Text).Trim()[1] + ",");
+                        lstYear += ((item.Cells[1].Text).Split('-').Last() + ",");
+                        //chk = true;
+                        //break;
+
+                    }
+                }
+            }
+            lstStatus = lstStatus.TrimEnd(',');
+            lstYear = lstYear.TrimEnd(',');
+
+
+
+
+
+            foreach (GridViewRow item in grdFieldCount.Rows)
+            {
+                // check row is datarow
+                if (item.RowType == DataControlRowType.DataRow)
+                {
+                    CheckBox chk = (item.FindControl("chkEntStatus") as CheckBox);
+                    if (chk.Checked)
+                    {
+                        // lstField =(item.Cells[1].Text);
+                        // lstField += "''" + (item.Cells[1].Text) + "'',";
+                        lstField += ("'" + (item.Cells[1].Text).Trim() + "',");
+                        Fieldchk = true;
+                        // break;
+                    }
+                }
+            }
+            // lstField = "''Accrual''";
+            lstField = lstField.TrimEnd(',');
+
+            fltVal.Add(new FilterValues
+            {
+                lstUW = lstUW,
+                lstENT = lstEntity,
+                lstField = lstField,
+                lstStatus = lstStatus,
+                lstYear = lstYear,
+                lstUY = lstUY
+            });
+            return fltVal;
+        }
+
+        #endregion
+        /// <summary>
+        /// Make sure the Checkbox states
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
+        #region checkbox status
         protected void grdStatusCount_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             GridViewRow gvr = e.Row;
@@ -1894,6 +1856,26 @@ namespace RegisRevoComparison
                 {
 
                     if (this.StatusTxt.Contains(lbltxt1))
+                        chkSelect.Checked = true;
+                    else
+                        chkSelect.Checked = false;
+                }
+            }
+        }
+
+        protected void grdEntityCnt_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            GridViewRow gvr = e.Row;
+
+            if (gvr.RowType == DataControlRowType.DataRow)
+            {
+                CheckBox chkSelect = gvr.FindControl("chkEnt") as CheckBox;
+
+                string lbltxt1 = e.Row.Cells[1].Text;
+                if (chkSelect != null)
+                {
+
+                    if (this.UWTxt.Contains(lbltxt1))
                         chkSelect.Checked = true;
                     else
                         chkSelect.Checked = false;
@@ -1944,45 +1926,13 @@ namespace RegisRevoComparison
                 }
             }
         }
+        #endregion
 
-        protected void Button2_Click(object sender, EventArgs e)
-        {
-            //dt = new DataTable();
-            //DataTable dt2 = new DataTable();
-            //DataRow dr2;
-            //using (var contxt = new DbAdapter())
-            //{
-            //    dt2 = contxt.GetTBDT1();
-            //}
-            //using (var contxt = new DbAdapter())
-            //{
-            //    dt = contxt.GetTB_DT(Convert.ToInt32(txtPeriod.Text),txtLe.Text);
-            //}
-
-            //foreach(DataRow dr in dt.Rows)
-            //{
-            //    dr2 = dt2.NewRow();
-            //    dr2["Office Code"] =Convert.ToInt32(dr["Office Code"]);
-            //    dr2["LegalEnt"] = txtLe.Text;
-            //    dr2["Period_year_month"] = txtPeriod.Text;
-            //    dr2["gl_bal_flg"] = dr["gl_bal_flg"];
-            //    dr2["GL Acct"] = dr["GL Acct"];
-            //    dr2["GL Acct Desc"] = dr["GL Acct Desc"];
-            //    dr2["PriorAmt"] = dr["PriorAmt"];
-            //    dr2["CurrentAmt"] = dr["CurrentAmt"];
-            //    dt2.Rows.Add(dr2);
-            //}
-
-            //using (var contxt = new DbAdapter())
-            //{
-            //    contxt.BlkInsertTB(dt2);
-
-            //}
-            //string jsMethodName = "HideProgressBar();";
-            ////string script = "window.onload = function() { HideProgressBar(); };";
-            //ScriptManager.RegisterClientScriptBlock(this, typeof(string), "uniqueKey", jsMethodName, true);
-        }
-
+        /// <summary>
+        /// Export the Excluded Data as A Report
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnEntUw_Click(object sender, EventArgs e)
         {
             dt = new DataTable();
@@ -2028,63 +1978,12 @@ namespace RegisRevoComparison
             }
         }
 
-        protected void btnEntUWRpt_Click(object sender, EventArgs e)
-        {
-            string lstEntity = "";
-            foreach (GridViewRow item in grdEntityCnt.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkEnt") as CheckBox);
-                    if (chk.Checked)
-                    {
-                        lstEntity = (item.Cells[1].Text);
-                        break;
-                    }
-                }
-            }
-            dt = new DataTable();
-            using (var contxt = new DbAdapter())
-            {
-                List<CompareResult> listItems = contxt.GetCompareResult(rdBtnRptType.SelectedValue, "", lstEntity, "", "", "", "");
-                dt = contxt.ToDataTable(listItems);
-            }
-            if (dt.Rows.Count > 0)
-            {
-
-
-
-                // dt.Columns.RemoveAt(9);
-                using (XLWorkbook wb = new XLWorkbook())
-                {
-                    wb.Worksheets.Add(dt, "Entity UW Report");
-                    var ws = wb.Worksheet(1);
-
-                    // Get a range object
-                    var rngHeaders = ws.Range("B3:F3");
-
-                    // Insert some rows/columns before the range
-                    ws.Row(1).InsertRowsAbove(2);
-                    ws.Row(1).Cell(1).Value = "Report Created Date";
-                    ws.Row(1).Cell(2).Value = DateTime.Now.Date;
-                    ws.Column(1).InsertColumnsBefore(2);
-                    ws.Worksheet.Columns().AdjustToContents();
-                    Response.Clear();
-                    Response.Buffer = true;
-                    Response.Charset = "";
-                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    Response.AddHeader("content-disposition", "attachment;filename=REGIS_REVO_Comparison_" + DateTime.Now + ".xlsx");
-                    using (MemoryStream MyMemoryStream = new MemoryStream())
-                    {
-                        wb.SaveAs(MyMemoryStream);
-                        MyMemoryStream.WriteTo(Response.OutputStream);
-                        Response.Flush();
-                        Response.End();
-                    }
-                }
-            }
-        }
+        /// <summary>
+        /// Export the Data to PDF with exlcuded data with Reasons
+        /// </summary>
+        /// <param name="dt"></param>
+        /// 
+        #region ExportPDF
         public void ExportToPdf(DataTable dt)
         {
             try
@@ -2368,171 +2267,15 @@ font2.SetColor(100,0,0);
 
             }
         }
-
-        public List<FilterValues> CheckAllFilters()
-        {
-            List<FilterValues> fltVal = new List<FilterValues>();
-            var uychk = false;
-            var uwchk = false;
-            var Entchk = false;
-            var Fieldchk = false;
-            string lstEntity = "";
-            string lstUY = "";
-            string lstYear = "";
-            string lstStatus = "";
-            string lstField = "";
-            string lstUW = "";
-            foreach (GridViewRow item in grdUYCnt.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkUY") as CheckBox);
-                    if (chk.Checked)
-                    {
-                        lstUY += ("'" + (item.Cells[1].Text).Trim() + "',");
-                        //break;
-                    }
-                }
-            }
-            lstUY = lstUY.TrimEnd(',');
-            // this.UWTxt.Clear();
-            foreach (GridViewRow item in grdUWCount.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chkSelect = (item.FindControl("chkEntStatus") as CheckBox);
-                    if (chkSelect != null)
-                    {
-                        string uwtxt = item.Cells[1].Text.Trim();
-
-
-                        if (chkSelect.Checked && !this.UWTxt.Contains(uwtxt))
-                        {
-
-                            this.UWTxt.Add(uwtxt);
-                            lstUW += ("'" + item.Cells[1].Text.Trim() + "',");
-                            uwchk = true;
-                            // break;
-                        }
-                        else if (!chkSelect.Checked && this.UWTxt.Contains(uwtxt))
-                        {
-                            this.UWTxt.Remove(uwtxt);
-                        }
-
-                    }
-                }
-            }
-            lstUW = lstUW.TrimEnd(',');
-            foreach (GridViewRow item in grdEntityCnt.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkENT") as CheckBox);
-                    if (chk.Checked)
-                    {
-                        lstEntity += ("'" + (item.Cells[1].Text).Trim() + "',");
-                        Entchk = true;
-                        //break;
-
-                    }
-                }
-            }
-            lstEntity = lstEntity.TrimEnd(',');
-
-            foreach (GridViewRow item in grdStatusCount.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkEntStatus") as CheckBox);
-                    if (chk.Checked)
-                    {
-
-                        lstStatus += ((item.Cells[1].Text).Trim()[1] + ",");
-                        lstYear += ((item.Cells[1].Text).Split('-').Last() + ",");
-                        //chk = true;
-                        //break;
-
-                    }
-                }
-            }
-            lstStatus = lstStatus.TrimEnd(',');
-            lstYear = lstYear.TrimEnd(',');
-
-
-
-
-           
-            foreach (GridViewRow item in grdFieldCount.Rows)
-            {
-                // check row is datarow
-                if (item.RowType == DataControlRowType.DataRow)
-                {
-                    CheckBox chk = (item.FindControl("chkEntStatus") as CheckBox);
-                    if (chk.Checked)
-                    {
-                        // lstField =(item.Cells[1].Text);
-                        // lstField += "''" + (item.Cells[1].Text) + "'',";
-                        lstField += ("'" + (item.Cells[1].Text).Trim() + "',");
-                        Fieldchk = true;
-                        // break;
-                    }
-                }
-            }
-            // lstField = "''Accrual''";
-            lstField = lstField.TrimEnd(',');
-
-            fltVal.Add(new FilterValues
-            {
-                lstUW = lstUW,
-                lstENT = lstEntity,
-                lstField = lstField,
-                lstStatus = lstStatus,
-                lstYear = lstYear,
-                lstUY = lstUY
-            });
-            return fltVal;
-        }
-        protected void grdEntityCnt_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            GridViewRow gvr = e.Row;
-
-            if (gvr.RowType == DataControlRowType.DataRow)
-            {
-                CheckBox chkSelect = gvr.FindControl("chkEnt") as CheckBox;
-
-                string lbltxt1 = e.Row.Cells[1].Text;
-                if (chkSelect != null)
-                {
-
-                    if (this.UWTxt.Contains(lbltxt1))
-                        chkSelect.Checked = true;
-                    else
-                        chkSelect.Checked = false;
-                }
-            }
-        }
-        protected void OnDataBound(object sender, EventArgs e)
-        {
-            GridViewRow row = new GridViewRow(0, 0, DataControlRowType.Header, DataControlRowState.Normal);
-            for (int i = 0; i < grdUYCnt.Columns.Count; i++)
-            {
-                if (i != 0)
-                {
-                    TableHeaderCell cell = new TableHeaderCell();
-                    TextBox txtSearch = new TextBox();
-                    txtSearch.Attributes["placeholder"] = grdUYCnt.Columns[1].HeaderText;
-                    txtSearch.CssClass = "search_textbox";
-                    cell.Controls.Add(txtSearch);
-                    row.Controls.Add(cell);
-                }
-            }
-            grdUYCnt.HeaderRow.Parent.Controls.AddAt(1, row);
-        }
-
+        #endregion
+       
+       
+        
+        /// <summary>
+        /// Exlcuded Modal Data Grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void grdExcluded1_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "cmdExcludeField")
@@ -2544,6 +2287,7 @@ font2.SetColor(100,0,0);
                 {
                     contxt.PutExcludeField(remainder, last, "", Page.User.Identity.Name, "Delete");
                     GetExcludedData();
+                     GetMatchData();
 
                 }
                 ScriptManager.RegisterStartupScript((sender as Control), this.GetType(), "Popup", " ShowExclPopup2(); ", true);

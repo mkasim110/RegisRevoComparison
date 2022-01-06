@@ -87,15 +87,6 @@ namespace RegisRevoComparison
         protected global::System.Web.UI.WebControls.Button BtnRefresh;
 
         /// <summary>
-        /// btnEntUWRpt control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnEntUWRpt;
-
-        /// <summary>
         /// btnEntUw control.
         /// </summary>
         /// <remarks>
@@ -130,15 +121,6 @@ namespace RegisRevoComparison
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdUYCnt;
-
-        /// <summary>
-        /// grdUWCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grdUWCount;
 
         /// <summary>
         /// grdEntityCnt control.
@@ -193,6 +175,15 @@ namespace RegisRevoComparison
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnShowExcludedFields;
+
+        /// <summary>
+        /// btnShowMatchFields control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnShowMatchFields;
 
         /// <summary>
         /// UpdatePanel5 control.
@@ -391,5 +382,32 @@ namespace RegisRevoComparison
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView grdHistory;
+
+        /// <summary>
+        /// Label2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label2;
+
+        /// <summary>
+        /// lblLastRefreshedDt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLastRefreshedDt;
+
+        /// <summary>
+        /// grdMatch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView grdMatch;
     }
 }

@@ -7,81 +7,79 @@
 <head runat="server">
     <title></title>
     <style>
-        html,body {
-    height: 97vh;
-     overflow: hidden;
-     font-family:Calibri;
-}
-        
-         .HeaderStyle
-        {
+        html, body {
+            height: 97vh;
+            overflow: hidden;
+            font-family: Calibri;
+        }
+
+        .HeaderStyle {
             position: absolute;
             margin-top: -1px;
-            font-size:10px;
-            font-family:Calibri;
+            font-size: 10px;
+            font-family: Calibri;
             border-top: 1px solid black;
             border-bottom: 1px solid black;
         }
-           .centerHeaderText th {
-        text-align: center;
-    }
-        .radioButtonList label{
-    display:inline;
-    padding-right: 30px;
-    margin-bottom:3px;
-}
-         .hiddencol
-  {
-    display: none;
-  }
-        .navbar-nav > li{
-  padding-left:10px;
-  padding-top:10px;
-  padding-right:10px;
-  color:white;
-}
-      
+        .centerHeaderText th {
+            text-align: center;
+        }
+        .radioButtonList label {
+            display: inline;
+            padding-right: 30px;
+            margin-bottom: 3px;
+        }
+        .hiddencol {
+            display: none;
+        }
+        .navbar-nav > li {
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-right: 10px;
+            color: white;
+        }
+
         #loaderDiv {
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  position: fixed;
-  display: block;
-  opacity: 0.7;
-  background-color: #fff;
-  z-index: 99;
-  text-align: center;
-}
-        table tr td .scroll{
-  height:25vh;
-  margin:5px;
-   overflow-y: scroll;
-   overflow-x: hidden;
-  margin-bottom:10px;
-}
-         .scroll2{
- height:58vh;
- width:99%;
-  margin:5px;
-   overflow-y: scroll;
-   overflow-x: hidden;
-  margin-top:10px;
-}
-     
-                  .Mainscroll{
- height: 58vh;
-width:99%;
-margin:5px;
-   overflow-y: scroll;
-   overflow-x: hidden;
-  margin-top:10px;
-}
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: fixed;
+            display: block;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            text-align: center;
+        }
+        table tr td .scroll {
+            height: 25vh;
+            margin: 5px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            margin-bottom: 10px;
+        }
+        .scroll2 {
+            height: 58vh;
+            width: 99%;
+            margin: 5px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            margin-top: 10px;
+        }
+
+        .Mainscroll {
+            height: 58vh;
+            width: 99%;
+            margin: 5px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            margin-top: 10px;
+        }
          
     </style>
      <script src="js/jquery.min.js" type="text/javascript"></script>
-<script src="js/jquery-ui.min.js" type="text/javascript"></script>
-<link href="js/jquery-ui.css" rel="Stylesheet" type="text/css" />
+    <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+    <link href="js/jquery-ui.css" rel="Stylesheet" type="text/css" />
     <link href="js/myStyle.css" rel="Stylesheet" type="text/css" />
     <link href="Content/bootstrap.css" rel="stylesheet" />
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
@@ -91,7 +89,7 @@ margin:5px;
     <script type="text/javascript">
    
  
-      function ShowProgressBar() {
+        function ShowProgressBar() {
         document.getElementById('dvProgressBar').style.visibility = 'visible';
       }
 
@@ -101,18 +99,18 @@ margin:5px;
           document.getElementById("txtReason").style.visibility="hidden";
       }
   
-</script>
+    </script>
      
 </head>
 <body  onload="javascript:HideProgressBar()" style="font-family:Calibri;">
     <form id="form1" runat="server">
-         <asp:ScriptManager ID="ScriptManager1" runat="server" AsyncPostBackTimeOut="1000">
+         <asp:ScriptManager ID="ScriptManager1" runat="server" AsyncPostBackTimeout="1000">
     </asp:ScriptManager>
        <div class="container-fluid">
         <div class="row">
              <asp:UpdatePanel ID="UpdatePanel1" runat="server" updatemode="Conditional">
                  <Triggers>
-            <asp:AsyncPostBackTrigger controlid="rdBtnRptType" eventname="SelectedIndexChanged" />
+            <asp:AsyncPostBackTrigger ControlID="rdBtnRptType" EventName="SelectedIndexChanged" />
                      
                      
         </Triggers>
@@ -140,7 +138,7 @@ margin:5px;
     <li>                   <asp:Button ID="btnExportPdf" Text="Export Pdf" class="btn btn-success" runat="server"  OnClick="btnExportPdf_Click"   /></li>
                     <li><asp:Button ID="BtnRefresh" Text="Refresh" class="btn btn-primary" runat="server" OnClick="BtnRefresh_Click"  OnClientClick="javascript:ShowProgressBar()" /></li>
     
-     <li><asp:Button ID="btnEntUWRpt" Text="Ent/UW Report"   Visible="false" class="btn btn-primary" runat="server" OnClick="btnEntUWRpt_Click"   /></li>
+    
    <li><asp:Button ID="btnEntUw" Text="Excluded Data Report"   class="btn btn-primary" runat="server" OnClick="btnEntUw_Click"   /></li>
                     <li><label style="margin-right:50px;" runat="server" id="lblUser">Windows User</label></li>
     </ul>
@@ -158,6 +156,7 @@ margin:5px;
                  <Triggers>
                      <asp:AsyncPostBackTrigger ControlID="grdEntityCnt" />
                       <asp:AsyncPostBackTrigger ControlID="grdUYCnt" />
+                      <asp:AsyncPostBackTrigger ControlID="btnShowMatchFields" />
                  </Triggers>
                 <ContentTemplate>
           <table style="width:100%;">
@@ -166,7 +165,7 @@ margin:5px;
 
                  <td style="width:26%;">
                 <div class="scroll">
-                 <asp:GridView runat="server"  ID="grdUYCnt"   DataKeyNames="EntityName" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
+                 <asp:GridView runat="server" ID="grdUYCnt" DataKeyNames="EntityName" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False" CssClass="table table-striped table-bordered table-hover table-condensed">
                      <HeaderStyle BackColor="Black"  Font-Bold="false" CssClass="centerHeaderText"  ForeColor="White"  />
                      <Columns>  
                          <asp:TemplateField>
@@ -174,36 +173,17 @@ margin:5px;
 <asp:CheckBox ID="chkUY" runat="server" AutoPostBack="true"  OnCheckedChanged="chkEnt_CheckedChanged1" />
 </ItemTemplate>
 </asp:TemplateField>
-                          <asp:BoundField DataField="EntityName" HeaderText="Rel UW" SortExpression="UY"  /> 
+                          <asp:BoundField DataField="EntityName" HeaderText="Rel UW" SortExpression="UY" /> 
                     
                           
-                     <%--<asp:BoundField DataField="Count"  DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HtmlEncode="false" HeaderText="Count" SortExpression="Count"  /> --%>
+                    
                         
 </Columns>
                  </asp:GridView>
                     </div>
                 </td>
 
-                <td style="width:0%;display:none;">
-                    <div class="scroll">
-                 <asp:GridView runat="server"  ID="grdUWCount" ShowHeaderWhenEmpty="true" AutoGenerateColumns="False"
-                 OnRowDataBound="grdUWCount_RowDataBound"    CssClass="table table-striped table-bordered table-hover table-condensed">
-                      <HeaderStyle BackColor="Black" CssClass="centerHeaderText" Font-Bold="false" ForeColor="White"  />
-                     <Columns>  
-                         <asp:TemplateField>
-<ItemTemplate>
-<asp:CheckBox ID="chkEntStatus" runat="server" AutoPostBack="true"  OnCheckedChanged="chkEntStatus_CheckedChangedUW" />
-</ItemTemplate>
-</asp:TemplateField>
-                         
-                     <asp:BoundField DataField="EntityName" HeaderText="Underwriter" ReadOnly="True" SortExpression="EntityName" />  
-                         
-                    <%-- <asp:BoundField DataField="Count" DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HeaderText="Count" SortExpression="Cnt"  /> --%>
-                        
-</Columns>
-                 </asp:GridView>
-                        </div>
-               </td>
+               
                <td style="width:25%;">
                    <div class="scroll">
                  <asp:GridView runat="server" ID="grdEntityCnt" ShowHeaderWhenEmpty="true" DataKeyNames="EntityName" 
@@ -216,13 +196,13 @@ margin:5px;
 </ItemTemplate>
 </asp:TemplateField>
                      <asp:BoundField DataField="EntityName" HeaderText="Entity" ReadOnly="True" SortExpression="EntityName" />  
-                         <%--<asp:BoundField DataField="Cnt" DataFormatString="{0:n0}" ItemStyle-HorizontalAlign="Right" HeaderText="Count" SortExpression="Cnt"  /> --%>
+                       
                      
 </Columns>
                  </asp:GridView>
                        </div>
                    </td>
-                                <td style="width:25%;">
+                                <td style="width: 25%;">
 
                    <div class="scroll">
                  <asp:GridView runat="server"  ID="grdStatusCount" ShowHeaderWhenEmpty="true"  DataKeyNames="EntityName" 
@@ -253,6 +233,8 @@ margin:5px;
                     <li style="margin-top:10px;"><asp:TextBox Visible="false" CssClass="form-control" runat="server" autocomplete="off" ID="txtProgramNumber" placeholder="At least 4 Number of Progam" TextMode="Number" ></asp:TextBox></li>
                        <li style="margin-top:10px;"><asp:Label  runat="server"  ID="lblData"  ></asp:Label></li>
                         <li><asp:Button ID="btnShowExcludedFields" Visible="false" Text="Show Excluded Fields" class="btn btn-primary" runat="server" OnClientClick="ShowExluPopup();"  /></li>
+                       <br />
+                       <li><asp:Button ID="btnShowMatchFields" Visible="false" Text="Previous Match Fields" class="btn btn-primary" runat="server" OnClientClick="ShowMatchPopup();"  /></li>
                        </ul>
 
                </td>
@@ -355,7 +337,7 @@ margin:5px;
       
   </div>
            <div id="dialog" style="display: none">
-              <%-- <asp:Button ID="btnExclude" runat="server" Text="Exclude"   OnClick="btnExclude_Click" />--%>
+              
     
 </div>
                     <asp:UpdatePanel ID="UpdatePanel4" runat="server" updatemode="Conditional">
@@ -630,6 +612,98 @@ margin:5px;
             </div>
 </div>
         </div>
+
+                    <div class="modal fade" id="myMatchModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h3 class="modal-title">Matched Fields History</h3>
+
+                    </div>
+                  <div class="modal-body" > 
+                     <div>
+                         <table>
+                             <tr>
+                                    <td>
+                            <asp:Label ID="Label2" Text="The below fields are now matched during the last Refresh on : " Font-Bold="true" runat="server"></asp:Label>
+                                        </td><td>
+                              <asp:Label ID="lblLastRefreshedDt" Font-Bold="true" runat="server"></asp:Label>
+                                            </td>
+                                    </tr>
+                         </table>
+                     </div>
+                        <div class="row">
+                            <asp:GridView ID="grdMatch" runat="server" 
+                                AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-condensed">
+                     <HeaderStyle BackColor="Black" CssClass="centerHeaderText"  ForeColor="White"  />
+        <Columns>
+              <asp:TemplateField HeaderText="Rel UnderWriter">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("Rel_UW_Fullname") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            <asp:TemplateField HeaderText="Date Refreshed">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("DateRefreshed") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Q-Year">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("[Q-Year]") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Entity">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("legal_ent_code") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="MasterKey">
+                    <ItemTemplate>
+                        <asp:Label ID="lblName" Text='<%#Eval("cont_master_key") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Field Name">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFieldDesc" Text='<%#Eval("FieldName") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            <asp:TemplateField HeaderText="REGIS">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFieldID" Text='<%#Eval("Regis") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>                
+             <asp:TemplateField HeaderText="REVO">
+                    <ItemTemplate>
+                        <asp:Label ID="lblReason" Text='<%#Eval("Revo") %>' runat="server" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+          
+        </Columns>
+                                <EmptyDataTemplate>
+        <div style="text-align:center;">No records found.</div>
+    </EmptyDataTemplate>
+    </asp:GridView>
+                            
+                            
+                        </div>
+                         </div>
+                    <div class="modal-footer">
+                        
+                        <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+                        
+
+
+                    </div>
+            </div>
+</div>
+        </div>
                      </ContentTemplate>
                         </asp:UpdatePanel>
     </div>
@@ -646,6 +720,11 @@ margin:5px;
            function ShowExluPopup() {
               
                $("#myExclModal").modal('show');
+
+           };
+           function ShowMatchPopup() {
+
+               $("#myMatchModal").modal('show');
 
            };
            function ShowHistoryPopup() {
@@ -667,7 +746,14 @@ margin:5px;
                $("#myExclModal").modal('show');
 
            };
-         function CheckSingleCheckbox(ob) {
+           function ShowMatchPopup2() {
+               $("#myMatchModal").modal('hide');
+               $('body').removeClass('modal-open');
+               $('.modal-backdrop').remove();
+               $("#myMatchModal").modal('show');
+
+           };
+           function CheckSingleCheckbox(ob) {
         var grid = ob.parentNode.parentNode.parentNode;
         var inputs = grid.getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
@@ -677,8 +763,7 @@ margin:5px;
                 }
             }
         }
-           }       
-
+           }  
            function FilterStatus()
            {
                var drpFilterType = document.getElementById("ddlReason");
@@ -720,7 +805,7 @@ document.getElementById("txtReason").style.visibility="hidden";
             tblData.rows[i].style.display = styleDisplay;
         }
     }    
-</script>
+        </script>
     </form>
 </body>
 </html>

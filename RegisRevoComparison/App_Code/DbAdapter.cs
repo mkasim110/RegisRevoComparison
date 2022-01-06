@@ -13,8 +13,7 @@ namespace RegisRevoComparison
     {
         private string _constring = ConfigurationManager.ConnectionStrings["New_REGREV_Conn"].ConnectionString;
         private readonly SqlConnection _regisRevoCon = null;
-        private string _constring2 = ConfigurationManager.ConnectionStrings["TB_conn"].ConnectionString;
-        private readonly SqlConnection _regisRevoCon2 = null;
+       
         public DbAdapter()
         {
             if (_regisRevoCon == null)
@@ -117,29 +116,7 @@ namespace RegisRevoComparison
             }
         }
 
-        public void BlkInsertTB(DataTable dt)
-        {
-            using (var sqlBulk = new SqlBulkCopy(_regisRevoCon2))
-            {
-                sqlBulk.DestinationTableName = "tbl_tb_rpt";
-                sqlBulk.WriteToServer(dt);
-            }
-        }
-        public DataTable GetTBDT1()
-        {
-            var sql = @"select * from tbl_tb_rpt where 1=0";
-            using (var dt = new DataTable())
-            {
-                using (var cmd = new SqlCommand(sql, _regisRevoCon2))
-                {
-                    using (var da = new SqlDataAdapter(cmd))
-                    {
-                        da.Fill(dt);
-                        return dt;
-                    }
-                }
-            }
-        }
+        
         public DataTable GetExcludedData()
         {
             var sql = @"select * from RegRevComp_exclude";
@@ -155,41 +132,8 @@ namespace RegisRevoComparison
                 }
             }
         }
-        public DataTable GetTB_DT(int period,string legalENt)
-        {
-            var sql = @"sp_run_tb";
-            using (var dt = new DataTable())
-            {
-                using (var cmd = new SqlCommand(sql, _regisRevoCon2))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandTimeout = 900;
-                    cmd.Parameters.Add(new SqlParameter("@period", period));
-                    cmd.Parameters.Add(new SqlParameter("@le", legalENt));
-                    using (var da = new SqlDataAdapter(cmd))
-                    {
+       
 
-                        da.Fill(dt);
-                        return dt;
-                    }
-                }
-            }
-        }
-
-        //public void ExcGET_REGIS_Data_SP(string datafile)
-        //{
-        //    var sql = @"sp_regrev_get_RegisData";
-        //    using (var dt = new DataTable())
-        //    {
-        //        using (var cmd = new SqlCommand(sql, _regisRevoCon))
-        //        {
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.CommandTimeout = 500;
-        //            cmd.Parameters.Add(new SqlParameter("@datafile", datafile));
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //}
         public int ExcCompSP(string datafile)
         {
             var sql = @"sp_regis_revo_comp_no_view_DT_v1";
@@ -620,6 +564,37 @@ and rpt_col=@rpt_col";
         }
 
 
+
+
+
+        public DataTable GetMatchResult(string rptType, string program, string entity, string uy, string uw, string field, string status)
+        {
+            var items = new List<CompareResult>();
+            var sql = @"[sp_regrev_get_match_historyData]";
+
+            using (var cmd = new SqlCommand(sql, _regisRevoCon))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add("@rpt_type", SqlDbType.NVarChar).Value = rptType;
+                cmd.Parameters.Add("@ent", SqlDbType.NVarChar).Value = (entity != "" ? entity : null);
+                cmd.Parameters.Add("@year", SqlDbType.NVarChar).Value = (program != "" ? program : null);
+                cmd.Parameters.Add("@reluw", SqlDbType.NVarChar).Value = (uy != "" ? uy : null);
+                cmd.Parameters.Add("@uw", SqlDbType.NVarChar).Value = (uw != "" ? uw : null);
+                cmd.Parameters.Add("@quarter", SqlDbType.NVarChar).Value = (status != "" ? status : null);
+                cmd.Parameters.Add("@reason", SqlDbType.NVarChar).Value = (field != "" ? field : null);
+                //DataSet ds = new DataSet();
+                using (var da = new SqlDataAdapter(cmd))
+                {
+                    using (var dt = new DataTable())
+                    {
+                        da.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+           
+        }
         public DataTable GetResultWithExcludedData(string rptType, string program, string entity, string uy, string uw, string field, string status)
         {
            
