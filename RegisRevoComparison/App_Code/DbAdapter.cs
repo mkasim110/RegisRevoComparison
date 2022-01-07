@@ -53,11 +53,21 @@ namespace RegisRevoComparison
         }
         public DateTime GetDataLastUpdateDate()
         {
-            var sql = @"select date_start from [dbo].[Is_data_reload]";
+            var sql = @"select top 1 RefreshOn from [dbo].[tblRefreshHistory] order by RefreshId desc";
             using (var cmd = new SqlCommand(sql, _regisRevoCon))
             {
                 
                 return Convert.ToDateTime(cmd.ExecuteScalar().ToString());
+            }
+        }
+
+        public string GetRefreshedBy()
+        {
+            var sql = @"select top 1 RefreshBy from [dbo].[tblRefreshHistory] order by RefreshId desc";
+            using (var cmd = new SqlCommand(sql, _regisRevoCon))
+            {
+
+                return cmd.ExecuteScalar().ToString();
             }
         }
         public DataTable GetRegRevoDT()
@@ -176,22 +186,23 @@ namespace RegisRevoComparison
             return items;
         }
 
-        public int InsReasons( string reason)
+        public void InsHistory( string RefreshBy, DateTime RefreshOn)
         {
             
-              string  sql = @"insert into  tblReasons(reason)
-            values (@reason)";
+              string  sql = @"insert into  tblRefreshHistory(RefreshBy,RefreshOn)
+            values (@RefreshBy,@RefreshOn)";
            
 
 
             using (var cmd = new SqlCommand(sql, _regisRevoCon))
             {
                 cmd.CommandType = CommandType.Text;                
-                cmd.Parameters.Add(new SqlParameter("@reason", reason));
-                return cmd.ExecuteNonQuery();
+                cmd.Parameters.Add(new SqlParameter("@RefreshBy", RefreshBy));
+                cmd.Parameters.Add(new SqlParameter("@RefreshOn", RefreshOn));
+                cmd.ExecuteNonQuery();
 
             }
-            return 0;
+           
         }
 
         public static T? ConvertReader<T>(object dbValue)

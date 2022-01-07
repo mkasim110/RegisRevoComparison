@@ -21,6 +21,7 @@ using iTextSharp.text.pdf;
 using Font = iTextSharp.text.Font;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace RegisRevoComparison
 {
@@ -51,7 +52,7 @@ namespace RegisRevoComparison
 
             using (var Context = new DbAdapter())
             {
-                lblData.Text = "Data as at : " +  Context.GetDataLastUpdateDate().ToString("MMM dd yyyy hh:mmtt");
+                lblData.Text = "Data as at : " +  Context.GetDataLastUpdateDate().ToString("MMM dd yyyy hh:mmtt")+" Refreshed By: "+Context.GetRefreshedBy();
                 grdUYCnt.DataSource = Context.GetRelUWCount(rdBtnRptType.SelectedValue,"","");
                 grdUYCnt.DataBind();
                 //ScriptManager.RegisterClientScriptBlock(this, typeof(string), "SearchBox", "Search_Gridview(this, 'grdUYCnt');", true);
@@ -311,7 +312,7 @@ namespace RegisRevoComparison
             try
             {   
                 CallAsysnAsync();
-                BindRefresh();
+                
 
             }
             catch(Exception ex)
@@ -954,6 +955,7 @@ namespace RegisRevoComparison
             {
                 contxt.BlkInsertRegREVDt(dt);              
                 int isExc = contxt.ExcCompSP(datafile);
+                contxt.InsHistory(HttpContext.Current.User.Identity.Name.ToString(), DateTime.ParseExact(datafile, "yyyyMMddHHmmssfff", CultureInfo.InvariantCulture)); ;
             }
             dt.Rows.Clear();
             // connection();
@@ -961,9 +963,11 @@ namespace RegisRevoComparison
             string jsMethodName = "HideProgressBar();";
            
             ScriptManager.RegisterClientScriptBlock(this, typeof(string), "uniqueKey", jsMethodName, true);
-           
+            BindRefresh();
         }
 
+
+        
         private IRestResponse NewMethod()
         {
             throw new NotImplementedException();

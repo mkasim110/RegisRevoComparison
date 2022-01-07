@@ -230,7 +230,7 @@
     
                     
                     <li><asp:Button ID="btnClear" Text="Clear Criteria" class="btn btn-primary" runat="server" OnClick="btnClear_Click"  /></li>
-                    <li style="margin-top:10px;"><asp:TextBox Visible="false" CssClass="form-control" runat="server" autocomplete="off" ID="txtProgramNumber" placeholder="At least 4 Number of Progam" TextMode="Number" ></asp:TextBox></li>
+                    <li style="margin-top:0px;"><asp:TextBox Visible="false" CssClass="form-control" runat="server" autocomplete="off" ID="txtProgramNumber" placeholder="At least 4 Number of Progam" TextMode="Number" ></asp:TextBox></li>
                        <li style="margin-top:10px;"><asp:Label  runat="server"  ID="lblData"  ></asp:Label></li>
                         <li><asp:Button ID="btnShowExcludedFields" Visible="false" Text="Show Excluded Fields" class="btn btn-primary" runat="server" OnClientClick="ShowExluPopup();"  /></li>
                        <br />
